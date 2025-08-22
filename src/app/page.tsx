@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { AddEquipmentForm } from '@/components/add-equipment-form';
+import { EditEquipmentForm } from '@/components/edit-equipment-form';
 import { EquipmentDetails } from '@/components/equipment-details';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,7 +16,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 export default function Home() {
   const [allEquipment, setAllEquipment] = useState<Equipment[]>(equipmentData);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(allEquipment[0] || null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(null);
 
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs'>) => {
     const newEquipment: Equipment = {
@@ -28,7 +31,19 @@ export default function Home() {
     };
     setAllEquipment(prev => [newEquipment, ...prev]);
     setSelectedEquipment(newEquipment);
-    setIsDialogOpen(false);
+    setIsAddDialogOpen(false);
+  };
+  
+  const handleEditEquipment = (updatedEquipmentData: Equipment) => {
+    setAllEquipment(prev => prev.map(e => e.id === updatedEquipmentData.id ? updatedEquipmentData : e));
+    setSelectedEquipment(updatedEquipmentData);
+    setIsEditDialogOpen(false);
+    setEditingEquipment(null);
+  };
+
+  const openEditDialog = (equipment: Equipment) => {
+    setEditingEquipment(equipment);
+    setIsEditDialogOpen(true);
   };
   
   const handleSelectChange = (equipmentId: string) => {
@@ -61,7 +76,7 @@ export default function Home() {
           </nav>
         </ScrollArea>
         <div className="p-4 border-t shrink-0">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button className="w-full">
                 <PlusCircle className="mr-2 h-4 w-4" />
@@ -83,7 +98,7 @@ export default function Home() {
              <Blocks className="h-6 w-6 text-primary" />
              <h1 className="text-lg font-bold">EquipTrack</h1>
            </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="icon" variant="ghost">
                   <PlusCircle className="h-5 w-5" />
@@ -112,7 +127,7 @@ export default function Home() {
         </div>
 
         {selectedEquipment ? (
-          <EquipmentDetails equipment={selectedEquipment} />
+          <EquipmentDetails equipment={selectedEquipment} onEdit={openEditDialog} />
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center p-4">
@@ -120,6 +135,20 @@ export default function Home() {
               <p className="mt-2 text-muted-foreground">Select an equipment from the list or add a new one.</p>
             </div>
           </div>
+        )}
+        
+        {editingEquipment && (
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+             <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Edit Equipment</DialogTitle>
+                </DialogHeader>
+                <EditEquipmentForm 
+                  equipment={editingEquipment}
+                  onFormSubmit={handleEditEquipment} 
+                />
+            </DialogContent>
+          </Dialog>
         )}
       </main>
     </div>

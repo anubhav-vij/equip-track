@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil
 } from 'lucide-react';
 import type { Equipment } from "@/lib/types";
 import {
@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Button } from "./ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MaintenanceSuggester } from "./maintenance-suggester";
@@ -25,7 +26,12 @@ import { SoftwareList } from './software-list';
 import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
 
-export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
+type EquipmentDetailsProps = {
+  equipment: Equipment;
+  onEdit: (equipment: Equipment) => void;
+};
+
+export function EquipmentDetails({ equipment, onEdit }: EquipmentDetailsProps) {
   const getStatusBadgeVariant = (status: Equipment['status']) => {
     switch (status) {
       case 'Active':
@@ -53,7 +59,12 @@ export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
   };
   
   const formatDate = (dateString: string) => {
-    return format(parseISO(dateString), 'PPP');
+    if (!dateString) return 'N/A';
+    try {
+        return format(parseISO(dateString), 'PPP');
+    } catch (error) {
+        return dateString;
+    }
   };
 
   return (
@@ -70,10 +81,14 @@ export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
               />
               <span className={cn("absolute -top-1 -right-1 block h-3 w-3 rounded-full", getStatusColorClass(equipment.status))} />
             </div>
-            <div>
+            <div className="flex-1">
                 <h2 className="text-lg font-bold">{equipment.name}</h2>
                 <p className="text-sm text-muted-foreground">{equipment.model}</p>
             </div>
+            <Button variant="outline" size="sm" onClick={() => onEdit(equipment)}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+            </Button>
             <Badge variant={getStatusBadgeVariant(equipment.status)} className="ml-auto hidden sm:block">{equipment.status}</Badge>
         </header>
 
