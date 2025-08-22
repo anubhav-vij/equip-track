@@ -1,8 +1,14 @@
 import type { Software } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { format, parseISO } from "date-fns";
 
 export function SoftwareList({ software }: { software: Software[] }) {
+
+  const formatDate = (dateString: string) => {
+    return format(parseISO(dateString), 'PPP');
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -25,7 +31,7 @@ export function SoftwareList({ software }: { software: Software[] }) {
                 <TableCell className="font-medium">{s.name}</TableCell>
                 <TableCell>{s.version}</TableCell>
                 <TableCell>{s.licenseKey}</TableCell>
-                <TableCell>{new Date(s.installDate).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(s.installDate)}</TableCell>
               </TableRow>
             )) : (
               <TableRow>

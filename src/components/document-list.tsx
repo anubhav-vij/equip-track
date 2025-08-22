@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "./ui/button";
 import { Download, FileText, Shield, FileQuestion, FileArchive } from "lucide-react";
 import { Badge } from "./ui/badge";
+import { format, parseISO } from "date-fns";
 
 export function DocumentList({ documents }: { documents: Document[] }) {
     
@@ -15,6 +16,11 @@ export function DocumentList({ documents }: { documents: Document[] }) {
         case 'Other': return <FileQuestion className="h-5 w-5 text-muted-foreground" />;
     }
   }
+  
+  const formatDate = (dateString: string) => {
+    return format(parseISO(dateString), 'PPP');
+  }
+
 
   return (
     <Card>
@@ -42,7 +48,7 @@ export function DocumentList({ documents }: { documents: Document[] }) {
                     </div>
                 </TableCell>
                 <TableCell className="font-medium">{doc.name}</TableCell>
-                <TableCell>{new Date(doc.uploadDate).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(doc.uploadDate)}</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="icon" asChild>
                     <a href={doc.url} download>

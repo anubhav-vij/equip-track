@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from './ui/badge';
+import { format, parseISO } from 'date-fns';
 
 export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
   const { toast } = useToast();
@@ -52,6 +53,10 @@ export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
       case 'Inspection': return 'secondary';
       default: return 'outline';
     }
+  }
+  
+  const formatDate = (dateString: string) => {
+    return format(parseISO(dateString), 'PPP');
   }
 
   return (
@@ -99,7 +104,7 @@ export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
                             <Badge variant={getBadgeVariant(log.type)}>{log.type}</Badge>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
-                                <span>{new Date(log.date).toLocaleDateString()}</span>
+                                <span>{formatDate(log.date)}</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 text-sm font-medium">

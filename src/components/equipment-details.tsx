@@ -23,6 +23,7 @@ import { DocumentList } from './document-list';
 import { ContractList } from './contract-list';
 import { SoftwareList } from './software-list';
 import { cn } from "@/lib/utils";
+import { format, parseISO } from "date-fns";
 
 export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
   const getStatusBadgeVariant = (status: Equipment['status']) => {
@@ -49,7 +50,11 @@ export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
       default:
         return 'bg-gray-500';
     }
-  }
+  };
+  
+  const formatDate = (dateString: string) => {
+    return format(parseISO(dateString), 'PPP');
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -101,14 +106,14 @@ export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
                                     <Calendar className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Purchase Date</p>
-                                        <p className="font-medium">{new Date(equipment.purchaseDate).toLocaleDateString()}</p>
+                                        <p className="font-medium">{formatDate(equipment.purchaseDate)}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <ShieldCheck className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Warranty End Date</p>
-                                        <p className="font-medium">{new Date(equipment.warrantyEndDate).toLocaleDateString()}</p>
+                                        <p className="font-medium">{formatDate(equipment.warrantyEndDate)}</p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -129,7 +134,7 @@ export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
 
                     <TabsContent value="service">
                        <ServiceLogs logs={equipment.serviceLogs} />
-                    </TabsContent>
+                    </Tabs-Content>
 
                     <TabsContent value="ai">
                         <MaintenanceSuggester equipment={equipment} />

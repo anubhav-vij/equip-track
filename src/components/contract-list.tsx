@@ -2,7 +2,7 @@ import type { ServiceContract } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "./ui/badge";
-import { differenceInDays, parseISO } from 'date-fns';
+import { differenceInDays, parseISO, format } from 'date-fns';
 
 export function ContractList({ contracts }: { contracts: ServiceContract[] }) {
 
@@ -15,6 +15,11 @@ export function ContractList({ contracts }: { contracts: ServiceContract[] }) {
     if (differenceInDays(renewal, today) <= 30) return <Badge variant="outline" className="text-yellow-600 border-yellow-600">Renews Soon</Badge>;
     return <Badge variant="default">Active</Badge>;
   }
+  
+  const formatDate = (dateString: string) => {
+    return format(parseISO(dateString), 'PPP');
+  }
+
 
   return (
     <Card>
@@ -37,9 +42,9 @@ export function ContractList({ contracts }: { contracts: ServiceContract[] }) {
             {contracts.length > 0 ? contracts.map(contract => (
               <TableRow key={contract.id}>
                 <TableCell className="font-medium">{contract.provider}</TableCell>
-                <TableCell>{new Date(contract.startDate).toLocaleDateString()}</TableCell>
-                <TableCell>{new Date(contract.endDate).toLocaleDateString()}</TableCell>
-                <TableCell>{new Date(contract.renewalDate).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(contract.startDate)}</TableCell>
+                <TableCell>{formatDate(contract.endDate)}</TableCell>
+                <TableCell>{formatDate(contract.renewalDate)}</TableCell>
                 <TableCell>{getStatus(contract.endDate, contract.renewalDate)}</TableCell>
               </TableRow>
             )) : (
