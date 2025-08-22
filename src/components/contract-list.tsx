@@ -46,6 +46,10 @@ export function ContractList({ contracts, onAddContract, onEditContract, onDelet
     return format(parseISO(dateString), 'PPP');
   }
 
+  const sortedContracts = [...contracts].sort((a, b) => {
+    return parseISO(b.startDate).getTime() - parseISO(a.startDate).getTime();
+  });
+
 
   return (
     <Card>
@@ -69,7 +73,7 @@ export function ContractList({ contracts, onAddContract, onEditContract, onDelet
             </TableRow>
           </TableHeader>
           <TableBody>
-            {contracts.length > 0 ? contracts.map(contract => (
+            {sortedContracts.length > 0 ? sortedContracts.map(contract => (
               <TableRow key={contract.id}>
                 <TableCell className="font-medium">{contract.provider}</TableCell>
                 <TableCell>{formatDate(contract.startDate)}</TableCell>
