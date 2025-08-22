@@ -134,7 +134,7 @@ export function EquipmentDetails({ equipment }: { equipment: Equipment }) {
 
                     <TabsContent value="service">
                        <ServiceLogs logs={equipment.serviceLogs} />
-                    </Tabs-Content>
+                    </TabsContent>
 
                     <TabsContent value="ai">
                         <MaintenanceSuggester equipment={equipment} />
