@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Blocks, PlusCircle } from 'lucide-react';
-import type { Equipment } from '@/lib/types';
+import type { Equipment, ServiceContract } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,8 @@ import { EditEquipmentForm } from '@/components/edit-equipment-form';
 import { EquipmentDetails } from '@/components/equipment-details';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AddServiceContractForm } from '@/components/add-service-contract-form';
+import { EditServiceContractForm } from '@/components/edit-service-contract-form';
 
 export default function Home() {
   const [allEquipment, setAllEquipment] = useState<Equipment[]>(equipmentData);
@@ -19,6 +21,10 @@ export default function Home() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(null);
+
+  const [isAddContractDialogOpen, setIsAddContractDialogOpen] = useState(false);
+  const [isEditContractDialogOpen, setIsEditContractDialogOpen] = useState(false);
+  const [editingContract, setEditingContract] = useState<ServiceContract | null>(null);
 
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs'>) => {
     const newEquipment: Equipment = {
@@ -49,6 +55,45 @@ export default function Home() {
   const handleSelectChange = (equipmentId: string) => {
     const equipment = allEquipment.find(e => e.id === equipmentId);
     setSelectedEquipment(equipment || null);
+  }
+
+  const handleAddContract = (newContractData: Omit<ServiceContract, 'id'>) => {
+    if (!selectedEquipment) return;
+    const newContract: ServiceContract = {
+      ...newContractData,
+      id: `c${Date.now()}`
+    }
+    const updatedEquipment = {
+      ...selectedEquipment,
+      contracts: [...selectedEquipment.contracts, newContract],
+    };
+    handleEditEquipment(updatedEquipment);
+    setIsAddContractDialogOpen(false);
+  }
+
+  const handleEditContract = (updatedContractData: ServiceContract) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = {
+      ...selectedEquipment,
+      contracts: selectedEquipment.contracts.map(c => c.id === updatedContractData.id ? updatedContractData : c),
+    };
+    handleEditEquipment(updatedEquipment);
+    setIsEditContractDialogOpen(false);
+    setEditingContract(null);
+  }
+
+  const handleDeleteContract = (contractId: string) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = {
+      ...selectedEquipment,
+      contracts: selectedEquipment.contracts.filter(c => c.id !== contractId),
+    };
+    handleEditEquipment(updatedEquipment);
+  }
+
+  const openEditContractDialog = (contract: ServiceContract) => {
+    setEditingContract(contract);
+    setIsEditContractDialogOpen(true);
   }
 
   return (
@@ -127,7 +172,13 @@ export default function Home() {
         </div>
 
         {selectedEquipment ? (
-          <EquipmentDetails equipment={selectedEquipment} onEdit={openEditDialog} />
+          <EquipmentDetails 
+            equipment={selectedEquipment} 
+            onEdit={openEditDialog} 
+            onAddContract={() => setIsAddContractDialogOpen(true)}
+            onEditContract={openEditContractDialog}
+            onDeleteContract={handleDeleteContract}
+          />
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center p-4">
@@ -147,6 +198,29 @@ export default function Home() {
                   equipment={editingEquipment}
                   onFormSubmit={handleEditEquipment} 
                 />
+            </DialogContent>
+          </Dialog>
+        )}
+
+        <Dialog open={isAddContractDialogOpen} onOpenChange={setIsAddContractDialogOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Add Service Contract</DialogTitle>
+            </DialogHeader>
+            <AddServiceContractForm onFormSubmit={handleAddContract} />
+          </DialogContent>
+        </Dialog>
+
+        {editingContract && (
+          <Dialog open={isEditContractDialogOpen} onOpenChange={setIsEditContractDialogOpen}>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Edit Service Contract</DialogTitle>
+              </DialogHeader>
+              <EditServiceContractForm
+                contract={editingContract}
+                onFormSubmit={handleEditContract}
+              />
             </DialogContent>
           </Dialog>
         )}

@@ -2,7 +2,7 @@ import Image from "next/image";
 import {
   Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil
 } from 'lucide-react';
-import type { Equipment } from "@/lib/types";
+import type { Equipment, ServiceContract } from "@/lib/types";
 import {
   Tabs,
   TabsContent,
@@ -29,9 +29,12 @@ import { format, parseISO } from "date-fns";
 type EquipmentDetailsProps = {
   equipment: Equipment;
   onEdit: (equipment: Equipment) => void;
+  onAddContract: () => void;
+  onEditContract: (contract: ServiceContract) => void;
+  onDeleteContract: (contractId: string) => void;
 };
 
-export function EquipmentDetails({ equipment, onEdit }: EquipmentDetailsProps) {
+export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContract, onDeleteContract }: EquipmentDetailsProps) {
   const getStatusBadgeVariant = (status: Equipment['status']) => {
     switch (status) {
       case 'Active':
@@ -136,7 +139,12 @@ export function EquipmentDetails({ equipment, onEdit }: EquipmentDetailsProps) {
                     </TabsContent>
 
                     <TabsContent value="contracts">
-                        <ContractList contracts={equipment.contracts} />
+                        <ContractList 
+                          contracts={equipment.contracts} 
+                          onAddContract={onAddContract}
+                          onEditContract={onEditContract}
+                          onDeleteContract={onDeleteContract}
+                        />
                     </TabsContent>
 
                     <TabsContent value="documents">
