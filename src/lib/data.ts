@@ -11,7 +11,24 @@ export const equipmentData: Equipment[] = [
     status: 'Active',
     imageUrl: 'https://placehold.co/100x100.png',
     contracts: [
-      { id: 'c1', provider: 'Stratasys Support', startDate: '2022-01-15', endDate: '2025-01-14', renewalDate: '2024-12-15', terms: 'Full coverage for parts and labor.' },
+      { 
+        id: 'c1', 
+        provider: 'Stratasys Support', 
+        startDate: '2022-01-15', 
+        endDate: '2025-01-14', 
+        renewalDate: '2024-12-15', 
+        terms: 'Full coverage for parts and labor.',
+        hasServiceContract: true,
+        numberOfPreventativeMaintenance: 2,
+        preventativeMaintenanceDueDate: '2024-09-01',
+        poStartDate: '2022-01-10',
+        poEndDate: '2025-01-10',
+        poNumber: 'PO-SC-123',
+        poLineNumber: '1',
+        annualCost: 5000,
+        creditUnusedCoverage: false,
+        vendorPoc: 'Alice Williams',
+      },
     ],
     documents: [
       { id: 'd1', name: 'F900 User Manual.pdf', type: 'Manual', uploadDate: '2022-01-15', url: '#' },
@@ -80,7 +97,15 @@ export const equipmentData: Equipment[] = [
     status: 'In-Repair',
     imageUrl: 'https://placehold.co/100x100.png',
     contracts: [
-      { id: 'c2', provider: 'Thermo Fisher Scientific', startDate: '2023-06-01', endDate: '2026-05-31', renewalDate: '2026-05-01', terms: 'Gold Support Plan with on-site service.' },
+      { 
+        id: 'c2', 
+        provider: 'Thermo Fisher Scientific', 
+        startDate: '2023-06-01', 
+        endDate: '2026-05-31', 
+        renewalDate: '2026-05-01', 
+        terms: 'Gold Support Plan with on-site service.',
+        hasServiceContract: true,
+      },
     ],
     documents: [
         { id: 'd4', name: 'Nicolet iS50 Manual.pdf', type: 'Manual', uploadDate: '2023-06-01', url: '#' },

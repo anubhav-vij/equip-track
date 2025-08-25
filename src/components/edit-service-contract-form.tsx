@@ -22,14 +22,28 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import type { ServiceContract } from '@/lib/types';
 import { Textarea } from './ui/textarea';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Checkbox } from './ui/checkbox';
 
 
 const formSchema = z.object({
-  provider: z.string().min(2, { message: "Provider name must be at least 2 characters." }),
+  provider: z.string().min(2, { message: "Service vendor is required." }),
   startDate: z.date({ required_error: "Start date is required." }),
   endDate: z.date({ required_error: "End date is required." }),
   renewalDate: z.date({ required_error: "Renewal date is required." }),
   terms: z.string().optional(),
+  
+  hasServiceContract: z.enum(['true', 'false'], { required_error: 'You must select an option.' }).transform(value => value === 'true'),
+  numberOfPreventativeMaintenance: z.coerce.number().optional(),
+  preventativeMaintenanceDoneDate: z.date().optional(),
+  preventativeMaintenanceDueDate: z.date().optional(),
+  poStartDate: z.date().optional(),
+  poEndDate: z.date().optional(),
+  poNumber: z.string().optional(),
+  poLineNumber: z.string().optional(),
+  annualCost: z.coerce.number().optional(),
+  creditUnusedCoverage: z.boolean().default(false).optional(),
+  vendorPoc: z.string().optional(),
 });
 
 type EditServiceContractFormProps = {
@@ -45,6 +59,11 @@ export function EditServiceContractForm({ contract, onFormSubmit }: EditServiceC
       startDate: parseISO(contract.startDate),
       endDate: parseISO(contract.endDate),
       renewalDate: parseISO(contract.renewalDate),
+      hasServiceContract: contract.hasServiceContract.toString() as 'true' | 'false',
+      preventativeMaintenanceDoneDate: contract.preventativeMaintenanceDoneDate ? parseISO(contract.preventativeMaintenanceDoneDate) : undefined,
+      preventativeMaintenanceDueDate: contract.preventativeMaintenanceDueDate ? parseISO(contract.preventativeMaintenanceDueDate) : undefined,
+      poStartDate: contract.poStartDate ? parseISO(contract.poStartDate) : undefined,
+      poEndDate: contract.poEndDate ? parseISO(contract.poEndDate) : undefined,
     },
   });
 
@@ -55,105 +74,151 @@ export function EditServiceContractForm({ contract, onFormSubmit }: EditServiceC
       startDate: format(values.startDate, 'yyyy-MM-dd'),
       endDate: format(values.endDate, 'yyyy-MM-dd'),
       renewalDate: format(values.renewalDate, 'yyyy-MM-dd'),
+      preventativeMaintenanceDoneDate: values.preventativeMaintenanceDoneDate ? format(values.preventativeMaintenanceDoneDate, 'yyyy-MM-dd') : undefined,
+      preventativeMaintenanceDueDate: values.preventativeMaintenanceDueDate ? format(values.preventativeMaintenanceDueDate, 'yyyy-MM-dd') : undefined,
+      poStartDate: values.poStartDate ? format(values.poStartDate, 'yyyy-MM-dd') : undefined,
+      poEndDate: values.poEndDate ? format(values.poEndDate, 'yyyy-MM-dd') : undefined,
       terms: values.terms || '',
     });
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1">
         <FormField
           control={form.control}
-          name="provider"
+          name="hasServiceContract"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Service Provider</FormLabel>
+            <FormItem className="space-y-3 rounded-lg border p-3 shadow-sm">
+              <FormLabel>Svc Cntrct?</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Manufacturer Support" {...field} />
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value?.toString()}
+                  className="flex space-x-4"
+                >
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="true" />
+                    </FormControl>
+                    <FormLabel className="font-normal">Yes</FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="false" />
+                    </FormControl>
+                    <FormLabel className="font-normal">No</FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Start Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>End Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-        </div>
-        <FormField
+          <FormField
+            control={form.control}
+            name="provider"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Service Vendor</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Manufacturer Support" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="vendorPoc"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Vendor POC</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Jane Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Start Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="endDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>End Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
             control={form.control}
             name="renewalDate"
             render={({ field }) => (
@@ -190,21 +255,242 @@ export function EditServiceContractForm({ contract, onFormSubmit }: EditServiceC
                 <FormMessage />
             </FormItem>
             )}
-        />
-        <FormField
+          />
+           <FormField
             control={form.control}
-            name="terms"
+            name="annualCost"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Terms & Conditions</FormLabel>
+                <FormLabel>Annual Cost</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Describe the contract terms..." {...field} />
+                  <Input type="number" placeholder="e.g., 5000" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
+          <FormField
+            control={form.control}
+            name="poNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>PO #</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., PO-12345" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="poLineNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>PO Line #</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., 1" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="poStartDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Start Date PO</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="poEndDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>End Date PO</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="numberOfPreventativeMaintenance"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel># of Preventative Maintenance</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="e.g., 4" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="preventativeMaintenanceDoneDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Preventative Maintenance Done Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="preventativeMaintenanceDueDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Preventative Maintenance Due Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="creditUnusedCoverage"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm col-span-2">
+                <div className="space-y-0.5">
+                  <FormLabel>Credit unused coverage</FormLabel>
+                </div>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        <FormField
+          control={form.control}
+          name="terms"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Terms & Conditions</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Describe the contract terms..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit" className="w-full">Save Changes</Button>
       </form>
     </Form>

@@ -1,10 +1,9 @@
 import type { ServiceContract } from "@/lib/types";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { differenceInDays, parseISO, format } from 'date-fns';
-import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Plus, Trash2, CheckCircle, XCircle } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -22,6 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Separator } from "./ui/separator";
 
 type ContractListProps = {
   contracts: ServiceContract[];
@@ -42,14 +42,25 @@ export function ContractList({ contracts, onAddContract, onEditContract, onDelet
     return <Badge variant="default">Active</Badge>;
   }
   
-  const formatDate = (dateString: string) => {
-    return format(parseISO(dateString), 'PPP');
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    try {
+      return format(parseISO(dateString), 'PPP');
+    } catch (error) {
+      return dateString;
+    }
   }
 
   const sortedContracts = [...contracts].sort((a, b) => {
     return parseISO(b.startDate).getTime() - parseISO(a.startDate).getTime();
   });
 
+  const InfoField = ({ label, value }: { label: string, value: React.ReactNode }) => (
+    <div>
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="text-sm font-medium">{value || 'N/A'}</p>
+    </div>
+  );
 
   return (
     <Card>
@@ -60,69 +71,90 @@ export function ContractList({ contracts, onAddContract, onEditContract, onDelet
           </div>
           <Button onClick={onAddContract}><Plus className="mr-2 h-4 w-4" /> Add Contract</Button>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Provider</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>End Date</TableHead>
-              <TableHead>Renewal Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedContracts.length > 0 ? sortedContracts.map(contract => (
-              <TableRow key={contract.id}>
-                <TableCell className="font-medium">{contract.provider}</TableCell>
-                <TableCell>{formatDate(contract.startDate)}</TableCell>
-                <TableCell>{formatDate(contract.endDate)}</TableCell>
-                <TableCell>{formatDate(contract.renewalDate)}</TableCell>
-                <TableCell>{getStatus(contract.endDate, contract.renewalDate)}</TableCell>
-                <TableCell className="text-right">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem onClick={() => onEditContract(contract)}>
-                                <Pencil className="mr-2 h-4 w-4" />
-                                Edit
-                            </DropdownMenuItem>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                   Delete
-                                </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the service contract.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => onDeleteContract(contract.id)}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            )) : (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-24">No contracts available.</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+      <CardContent className="space-y-4">
+        {sortedContracts.length > 0 ? sortedContracts.map(contract => (
+          <Card key={contract.id} className="bg-muted/30">
+            <CardHeader className="flex-row justify-between items-start">
+              <div>
+                <CardTitle className="text-lg">{contract.provider}</CardTitle>
+                <div className="flex items-center gap-4 text-sm mt-1">
+                  {getStatus(contract.endDate, contract.renewalDate)}
+                   <div className="flex items-center gap-2">
+                      {contract.hasServiceContract ? <CheckCircle className="h-4 w-4 text-green-600" /> : <XCircle className="h-4 w-4 text-red-600" />}
+                      <span>Service Contract</span>
+                   </div>
+                </div>
+              </div>
+              <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                          <MoreVertical className="h-4 w-4" />
+                      </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => onEditContract(contract)}>
+                          <Pencil className="mr-2 h-4 w-4" />
+                          Edit
+                      </DropdownMenuItem>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete the service contract.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => onDeleteContract(contract.id)}>Continue</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                  </DropdownMenuContent>
+              </DropdownMenu>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Separator />
+               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <InfoField label="Service Vendor" value={contract.provider} />
+                  <InfoField label="Vendor POC" value={contract.vendorPoc} />
+                  <InfoField label="Start Date" value={formatDate(contract.startDate)} />
+                  <InfoField label="End Date" value={formatDate(contract.endDate)} />
+                  <InfoField label="Renewal Date" value={formatDate(contract.renewalDate)} />
+                  <InfoField label="Annual Cost" value={contract.annualCost ? `$${contract.annualCost.toLocaleString()}`: 'N/A'} />
+                  <InfoField label="Credit Unused Coverage" value={contract.creditUnusedCoverage ? 'Yes' : 'No'} />
+               </div>
+               <Separator />
+               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <InfoField label="PO #" value={contract.poNumber} />
+                  <InfoField label="PO Line #" value={contract.poLineNumber} />
+                  <InfoField label="PO Start Date" value={formatDate(contract.poStartDate)} />
+                  <InfoField label="PO End Date" value={formatDate(contract.poEndDate)} />
+               </div>
+               <Separator />
+               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <InfoField label="# of PMs" value={contract.numberOfPreventativeMaintenance} />
+                  <InfoField label="PM Done Date" value={formatDate(contract.preventativeMaintenanceDoneDate)} />
+                  <InfoField label="PM Due Date" value={formatDate(contract.preventativeMaintenanceDueDate)} />
+               </div>
+               <Separator />
+               <div>
+                  <h4 className="font-medium mb-2">Terms & Conditions</h4>
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{contract.terms || 'No terms specified.'}</p>
+               </div>
+            </CardContent>
+          </Card>
+        )) : (
+          <div className="text-center h-24 flex items-center justify-center">
+              <p>No contracts available.</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

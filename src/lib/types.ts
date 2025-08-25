@@ -29,11 +29,24 @@ export interface Equipment {
 
 export interface ServiceContract {
   id: string;
-  provider: string;
+  provider: string; // Will be repurposed for Service Vendor
   startDate: string;
   endDate: string;
   terms: string;
   renewalDate: string;
+
+  // New fields
+  hasServiceContract: boolean;
+  numberOfPreventativeMaintenance?: number;
+  preventativeMaintenanceDoneDate?: string;
+  preventativeMaintenanceDueDate?: string;
+  poStartDate?: string;
+  poEndDate?: string;
+  poNumber?: string;
+  poLineNumber?: string;
+  annualCost?: number;
+  creditUnusedCoverage?: boolean;
+  vendorPoc?: string;
 }
 
 export interface Document {
