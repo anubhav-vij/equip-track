@@ -45,7 +45,7 @@ const formSchema = z.object({
   nciNumber: z.string().min(1, { message: "NCI number is required." }),
   nihNumber: z.string().min(1, { message: "NIH number is required." }),
   transferred: z.boolean().default(false),
-  poc: z.string().min(1, { message: "Point of contact is required." }),
+  poc: z.string().min(1, { message: "Point of Contact is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
   purchasingAmbisPoNumber: z.string().min(1, { message: "Purchasing AMBIS#/PO# is required." }),
   installedDate: z.date({ required_error: "Installed date is required." }),

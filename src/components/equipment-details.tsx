@@ -151,7 +151,7 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                         <div className="flex items-start gap-3">
                                             <Contact className="h-5 w-5 mt-1 text-primary" />
                                             <div>
-                                                <p className="text-muted-foreground">POC</p>
+                                                <p className="text-muted-foreground">Point of Contact</p>
                                                 <p className="font-medium">{equipment.poc}</p>
                                             </div>
                                         </div>
