@@ -103,7 +103,7 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                     <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 mb-6">
                         <TabsTrigger value="overview"><Info className="mr-1.5 h-4 w-4" />Overview</TabsTrigger>
                         <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>
-                        <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />SCA (Service Contract Agreement)</TabsTrigger>
+                        <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />Service Contract</TabsTrigger>
                         <TabsTrigger value="documents"><FileText className="mr-1.5 h-4 w-4" />Documents</TabsTrigger>
                         <TabsTrigger value="software"><Cpu className="mr-1.5 h-4 w-4" />Software</TabsTrigger>
                         <TabsTrigger value="service"><Wrench className="mr-1.5 h-4 w-4" />Service</TabsTrigger>
