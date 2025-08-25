@@ -3,7 +3,7 @@ import Image from "next/image";
 import {
   Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server
 } from 'lucide-react';
-import type { Equipment, ServiceContract } from "@/lib/types";
+import type { Equipment, ServiceContract, Document, Software, ServiceLog } from "@/lib/types";
 import {
   Tabs,
   TabsContent,
@@ -35,9 +35,33 @@ type EquipmentDetailsProps = {
   onAddContract: () => void;
   onEditContract: (contract: ServiceContract) => void;
   onDeleteContract: (contractId: string) => void;
+  onAddDocument: () => void;
+  onEditDocument: (document: Document) => void;
+  onDeleteDocument: (documentId: string) => void;
+  onAddSoftware: () => void;
+  onEditSoftware: (software: Software) => void;
+  onDeleteSoftware: (softwareId: string) => void;
+  onAddLog: () => void;
+  onEditLog: (log: ServiceLog) => void;
+  onDeleteLog: (logId: string) => void;
 };
 
-export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContract, onDeleteContract }: EquipmentDetailsProps) {
+export function EquipmentDetails({ 
+  equipment, 
+  onEdit, 
+  onAddContract, 
+  onEditContract, 
+  onDeleteContract,
+  onAddDocument,
+  onEditDocument,
+  onDeleteDocument,
+  onAddSoftware,
+  onEditSoftware,
+  onDeleteSoftware,
+  onAddLog,
+  onEditLog,
+  onDeleteLog
+}: EquipmentDetailsProps) {
   const getStatusBadgeVariant = (status: Equipment['status']) => {
     switch (status) {
       case 'Active':
@@ -309,15 +333,30 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                     </TabsContent>
 
                     <TabsContent value="documents">
-                       <DocumentList documents={equipment.documents} />
+                       <DocumentList 
+                         documents={equipment.documents}
+                         onAddDocument={onAddDocument}
+                         onEditDocument={onEditDocument}
+                         onDeleteDocument={onDeleteDocument}
+                       />
                     </TabsContent>
 
                     <TabsContent value="software">
-                       <SoftwareList software={equipment.software} />
+                       <SoftwareList 
+                         software={equipment.software} 
+                         onAddSoftware={onAddSoftware}
+                         onEditSoftware={onEditSoftware}
+                         onDeleteSoftware={onDeleteSoftware}
+                       />
                     </TabsContent>
 
                     <TabsContent value="service">
-                       <ServiceLogs logs={equipment.serviceLogs} />
+                       <ServiceLogs 
+                        logs={equipment.serviceLogs}
+                        onAddLog={onAddLog}
+                        onEditLog={onEditLog}
+                        onDeleteLog={onDeleteLog}
+                        />
                     </TabsContent>
 
                     <TabsContent value="ai">

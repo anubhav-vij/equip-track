@@ -1,12 +1,38 @@
+
 import type { Document } from "@/lib/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "./ui/button";
-import { Download, FileText, Shield, FileQuestion, FileArchive } from "lucide-react";
+import { Download, FileText, Shield, FileQuestion, FileArchive, Plus, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { format, parseISO } from "date-fns";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
-export function DocumentList({ documents }: { documents: Document[] }) {
+type DocumentListProps = {
+  documents: Document[];
+  onAddDocument: () => void;
+  onEditDocument: (doc: Document) => void;
+  onDeleteDocument: (docId: string) => void;
+}
+
+
+export function DocumentList({ documents, onAddDocument, onEditDocument, onDeleteDocument }: DocumentListProps) {
     
   const getIcon = (type: Document['type']) => {
     switch(type) {
@@ -24,9 +50,12 @@ export function DocumentList({ documents }: { documents: Document[] }) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Documents</CardTitle>
-        <CardDescription>Manuals, warranties, invoices, and other related documents.</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Documents</CardTitle>
+          <CardDescription>Manuals, warranties, invoices, and other related documents.</CardDescription>
+        </div>
+        <Button onClick={onAddDocument}><Plus className="mr-2 h-4 w-4" /> Add Document</Button>
       </CardHeader>
       <CardContent>
         <Table>
@@ -50,12 +79,43 @@ export function DocumentList({ documents }: { documents: Document[] }) {
                 <TableCell className="font-medium">{doc.name}</TableCell>
                 <TableCell>{formatDate(doc.uploadDate)}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="icon" asChild>
-                    <a href={doc.url} download>
-                      <Download className="h-4 w-4" />
-                      <span className="sr-only">Download</span>
-                    </a>
-                  </Button>
+                  <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                              <MoreVertical className="h-4 w-4" />
+                          </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                          <DropdownMenuItem onClick={() => onEditDocument(doc)}>
+                              <Pencil className="mr-2 h-4 w-4" />
+                              Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => window.open(doc.url, '_blank')}>
+                              <Download className="mr-2 h-4 w-4" />
+                              Download
+                          </DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete
+                              </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will permanently delete the document.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => onDeleteDocument(doc.id)}>Continue</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                      </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             )) : (

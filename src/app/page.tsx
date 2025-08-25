@@ -1,8 +1,9 @@
+
 "use client";
 
-import { useState } from 'react';
-import { Blocks, PlusCircle } from 'lucide-react';
-import type { Equipment, ServiceContract } from '@/lib/types';
+import { useState, useMemo } from 'react';
+import { Blocks, PlusCircle, Search } from 'lucide-react';
+import type { Equipment, ServiceContract, Document, Software, ServiceLog } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -14,10 +15,20 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AddServiceContractForm } from '@/components/add-service-contract-form';
 import { EditServiceContractForm } from '@/components/edit-service-contract-form';
+import { Input } from '@/components/ui/input';
+import { AddDocumentForm } from '@/components/add-document-form';
+import { EditDocumentForm } from '@/components/edit-document-form';
+import { AddSoftwareForm } from '@/components/add-software-form';
+import { EditSoftwareForm } from '@/components/edit-software-form';
+import { AddServiceLogForm } from '@/components/add-service-log-form';
+import { EditServiceLogForm } from '@/components/edit-service-log-form';
+
 
 export default function Home() {
   const [allEquipment, setAllEquipment] = useState<Equipment[]>(equipmentData);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(allEquipment[0] || null);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(null);
@@ -26,10 +37,31 @@ export default function Home() {
   const [isEditContractDialogOpen, setIsEditContractDialogOpen] = useState(false);
   const [editingContract, setEditingContract] = useState<ServiceContract | null>(null);
 
+  const [isAddDocumentDialogOpen, setIsAddDocumentDialogOpen] = useState(false);
+  const [isEditDocumentDialogOpen, setIsEditDocumentDialogOpen] = useState(false);
+  const [editingDocument, setEditingDocument] = useState<Document | null>(null);
+
+  const [isAddSoftwareDialogOpen, setIsAddSoftwareDialogOpen] = useState(false);
+  const [isEditSoftwareDialogOpen, setIsEditSoftwareDialogOpen] = useState(false);
+  const [editingSoftware, setEditingSoftware] = useState<Software | null>(null);
+
+  const [isAddLogDialogOpen, setIsAddLogDialogOpen] = useState(false);
+  const [isEditLogDialogOpen, setIsEditLogDialogOpen] = useState(false);
+  const [editingLog, setEditingLog] = useState<ServiceLog | null>(null);
+
+  const filteredEquipment = useMemo(() => {
+    if (!searchQuery) return allEquipment;
+    return allEquipment.filter(e => 
+      e.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.serialNumber.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, allEquipment]);
+
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs'>) => {
     const newEquipment: Equipment = {
       ...newEquipmentData,
-      id: (allEquipment.length + 1).toString(),
+      id: `eq${Date.now()}`,
       contracts: [],
       documents: [],
       software: [],
@@ -63,6 +95,7 @@ export default function Home() {
     setSelectedEquipment(equipment || null);
   }
 
+  // --- Contract Handlers ---
   const handleAddContract = (newContractData: Omit<ServiceContract, 'id'>) => {
     if (!selectedEquipment) return;
     const newContract: ServiceContract = {
@@ -101,17 +134,115 @@ export default function Home() {
     setEditingContract(contract);
     setIsEditContractDialogOpen(true);
   }
+  
+  // --- Document Handlers ---
+  const handleAddDocument = (newDocumentData: Omit<Document, 'id'>) => {
+    if (!selectedEquipment) return;
+    const newDocument: Document = { ...newDocumentData, id: `d${Date.now()}` };
+    const updatedEquipment = { ...selectedEquipment, documents: [...selectedEquipment.documents, newDocument] };
+    handleEditEquipment(updatedEquipment);
+    setIsAddDocumentDialogOpen(false);
+  };
+
+  const handleEditDocument = (updatedDocument: Document) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = { ...selectedEquipment, documents: selectedEquipment.documents.map(d => d.id === updatedDocument.id ? updatedDocument : d) };
+    handleEditEquipment(updatedEquipment);
+    setIsEditDocumentDialogOpen(false);
+    setEditingDocument(null);
+  };
+
+  const handleDeleteDocument = (documentId: string) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = { ...selectedEquipment, documents: selectedEquipment.documents.filter(d => d.id !== documentId) };
+    handleEditEquipment(updatedEquipment);
+  };
+
+  const openEditDocumentDialog = (document: Document) => {
+    setEditingDocument(document);
+    setIsEditDocumentDialogOpen(true);
+  };
+
+  // --- Software Handlers ---
+  const handleAddSoftware = (newSoftwareData: Omit<Software, 'id'>) => {
+    if (!selectedEquipment) return;
+    const newSoftware: Software = { ...newSoftwareData, id: `s${Date.now()}` };
+    const updatedEquipment = { ...selectedEquipment, software: [...selectedEquipment.software, newSoftware] };
+    handleEditEquipment(updatedEquipment);
+    setIsAddSoftwareDialogOpen(false);
+  };
+
+  const handleEditSoftware = (updatedSoftware: Software) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = { ...selectedEquipment, software: selectedEquipment.software.map(s => s.id === updatedSoftware.id ? updatedSoftware : s) };
+    handleEditEquipment(updatedEquipment);
+    setIsEditSoftwareDialogOpen(false);
+    setEditingSoftware(null);
+  };
+
+  const handleDeleteSoftware = (softwareId: string) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = { ...selectedEquipment, software: selectedEquipment.software.filter(s => s.id !== softwareId) };
+    handleEditEquipment(updatedEquipment);
+  };
+
+  const openEditSoftwareDialog = (software: Software) => {
+    setEditingSoftware(software);
+    setIsEditSoftwareDialogOpen(true);
+  };
+
+  // --- Service Log Handlers ---
+  const handleAddLog = (newLogData: Omit<ServiceLog, 'id'>) => {
+    if (!selectedEquipment) return;
+    const newLog: ServiceLog = { ...newLogData, id: `sl${Date.now()}` };
+    const updatedEquipment = { ...selectedEquipment, serviceLogs: [newLog, ...selectedEquipment.serviceLogs] };
+    handleEditEquipment(updatedEquipment);
+    setIsAddLogDialogOpen(false);
+  };
+
+  const handleEditLog = (updatedLog: ServiceLog) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = { ...selectedEquipment, serviceLogs: selectedEquipment.serviceLogs.map(l => l.id === updatedLog.id ? updatedLog : l) };
+    handleEditEquipment(updatedEquipment);
+    setIsEditLogDialogOpen(false);
+    setEditingLog(null);
+  };
+
+  const handleDeleteLog = (logId: string) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = { ...selectedEquipment, serviceLogs: selectedEquipment.serviceLogs.filter(l => l.id !== logId) };
+    handleEditEquipment(updatedEquipment);
+  };
+
+  const openEditLogDialog = (log: ServiceLog) => {
+    setEditingLog(log);
+    setIsEditLogDialogOpen(true);
+  };
+
 
   return (
     <div className="grid md:grid-cols-[280px_1fr] h-screen bg-background text-foreground">
       <div className="hidden md:flex flex-col bg-card border-r">
-        <div className="p-4 flex items-center gap-2 border-b h-16 shrink-0">
-          <Blocks className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">EquipTrack</h1>
+        <div className="p-4 flex items-center justify-between gap-2 border-b h-16 shrink-0">
+          <div className="flex items-center gap-2">
+            <Blocks className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-bold">EquipTrack</h1>
+          </div>
+        </div>
+        <div className="p-2 border-b">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search equipment..." 
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
         <ScrollArea className="flex-1">
           <nav className="p-2 flex flex-col gap-1">
-            {allEquipment.map((item) => (
+            {filteredEquipment.map((item) => (
               <button
                 key={item.id}
                 onClick={() => setSelectedEquipment(item)}
@@ -184,6 +315,15 @@ export default function Home() {
             onAddContract={() => setIsAddContractDialogOpen(true)}
             onEditContract={openEditContractDialog}
             onDeleteContract={handleDeleteContract}
+            onAddDocument={() => setIsAddDocumentDialogOpen(true)}
+            onEditDocument={openEditDocumentDialog}
+            onDeleteDocument={handleDeleteDocument}
+            onAddSoftware={() => setIsAddSoftwareDialogOpen(true)}
+            onEditSoftware={openEditSoftwareDialog}
+            onDeleteSoftware={handleDeleteSoftware}
+            onAddLog={() => setIsAddLogDialogOpen(true)}
+            onEditLog={openEditLogDialog}
+            onDeleteLog={handleDeleteLog}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center">
@@ -230,6 +370,67 @@ export default function Home() {
             </DialogContent>
           </Dialog>
         )}
+        
+        <Dialog open={isAddDocumentDialogOpen} onOpenChange={setIsAddDocumentDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add Document</DialogTitle>
+                </DialogHeader>
+                <AddDocumentForm onFormSubmit={handleAddDocument} />
+            </DialogContent>
+        </Dialog>
+        
+        {editingDocument && (
+            <Dialog open={isEditDocumentDialogOpen} onOpenChange={setIsEditDocumentDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Edit Document</DialogTitle>
+                    </DialogHeader>
+                    <EditDocumentForm document={editingDocument} onFormSubmit={handleEditDocument} />
+                </DialogContent>
+            </Dialog>
+        )}
+
+        <Dialog open={isAddSoftwareDialogOpen} onOpenChange={setIsAddSoftwareDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add Software</DialogTitle>
+                </DialogHeader>
+                <AddSoftwareForm onFormSubmit={handleAddSoftware} />
+            </DialogContent>
+        </Dialog>
+
+        {editingSoftware && (
+            <Dialog open={isEditSoftwareDialogOpen} onOpenChange={setIsEditSoftwareDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Edit Software</DialogTitle>
+                    </DialogHeader>
+                    <EditSoftwareForm software={editingSoftware} onFormSubmit={handleEditSoftware} />
+                </DialogContent>
+            </Dialog>
+        )}
+
+        <Dialog open={isAddLogDialogOpen} onOpenChange={setIsAddLogDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add Service Log</DialogTitle>
+                </DialogHeader>
+                <AddServiceLogForm onFormSubmit={handleAddLog} />
+            </DialogContent>
+        </Dialog>
+
+        {editingLog && (
+            <Dialog open={isEditLogDialogOpen} onOpenChange={setIsEditLogDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Edit Service Log</DialogTitle>
+                    </DialogHeader>
+                    <EditServiceLogForm log={editingLog} onFormSubmit={handleEditLog} />
+                </DialogContent>
+            </Dialog>
+        )}
+
       </main>
     </div>
   );

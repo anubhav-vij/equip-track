@@ -1,6 +1,7 @@
+
 "use client"
 import { useState } from 'react';
-import { Loader2, Sparkles, Plus, Wrench, Calendar } from 'lucide-react';
+import { Loader2, Sparkles, Plus, Wrench, Calendar, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { summarizeServiceReports, SummarizeServiceReportsOutput } from '@/ai/flows/summarize-service-reports';
 import type { ServiceLog } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -8,8 +9,32 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from './ui/badge';
 import { format, parseISO } from 'date-fns';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
-export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
+type ServiceLogsProps = {
+  logs: ServiceLog[];
+  onAddLog: () => void;
+  onEditLog: (log: ServiceLog) => void;
+  onDeleteLog: (logId: string) => void;
+};
+
+export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceLogsProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<SummarizeServiceReportsOutput | null>(null);
@@ -80,8 +105,7 @@ export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
                     </>
                 )}
             </Button>
-            {/* Future: Add new log functionality */}
-            {/* <Button><Plus className="mr-2 h-4 w-4" />Add Log</Button> */}
+            <Button onClick={onAddLog}><Plus className="mr-2 h-4 w-4" />Add Log</Button>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -98,7 +122,7 @@ export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
 
         <div className="space-y-4">
             {logs.length > 0 ? logs.map(log => (
-                <div key={log.id} className="p-4 rounded-lg border bg-card">
+                <div key={log.id} className="p-4 rounded-lg border bg-card relative group">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-4">
                             <Badge variant={getBadgeVariant(log.type)}>{log.type}</Badge>
@@ -112,7 +136,42 @@ export function ServiceLogs({ logs }: { logs: ServiceLog[] }) {
                             <span>{log.technician}</span>
                         </div>
                     </div>
-                    <p className="text-sm text-foreground/80">{log.notes}</p>
+                    <p className="text-sm text-foreground/80 pr-8">{log.notes}</p>
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                    <MoreVertical className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem onClick={() => onEditLog(log)}>
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    Edit
+                                </DropdownMenuItem>
+                                <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                        Delete
+                                    </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete the service log.
+                                    </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => onDeleteLog(log.id)}>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                                </AlertDialog>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             )) : (
                 <p className="text-sm text-muted-foreground text-center py-8">No service logs available.</p>
