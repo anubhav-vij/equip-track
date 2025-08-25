@@ -38,6 +38,9 @@ export default function Home() {
     setAllEquipment(prev => [newEquipment, ...prev]);
     setSelectedEquipment(newEquipment);
     setIsAddDialogOpen(false);
+    if (newEquipment.hasServiceContract) {
+      setIsAddContractDialogOpen(true);
+    }
   };
   
   const handleEditEquipment = (updatedEquipmentData: Equipment) => {
@@ -45,6 +48,9 @@ export default function Home() {
     setSelectedEquipment(updatedEquipmentData);
     setIsEditDialogOpen(false);
     setEditingEquipment(null);
+    if (updatedEquipmentData.hasServiceContract && updatedEquipmentData.contracts.length === 0) {
+      setIsAddContractDialogOpen(true);
+    }
   };
 
   const openEditDialog = (equipment: Equipment) => {
