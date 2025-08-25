@@ -36,6 +36,8 @@ export const equipmentData: Equipment[] = [
     installedDate: '2022-01-20',
     node: 'N-123',
     probe: 'P-456',
+    onNetwork: true,
+    computerAssociated: '192.168.1.101',
   },
   {
     id: '2',
@@ -66,6 +68,7 @@ export const equipmentData: Equipment[] = [
     notes: 'Used for high-precision metal parts.',
     purchasingAmbisPoNumber: 'PO-2021-002',
     installedDate: '2021-03-25',
+    onNetwork: false,
   },
   {
     id: '3',
@@ -99,5 +102,7 @@ export const equipmentData: Equipment[] = [
     notes: 'Critical for material analysis.',
     purchasingAmbisPoNumber: 'PO-2023-003',
     installedDate: '2023-06-05',
+    onNetwork: true,
+    computerAssociated: '00:1B:44:11:3A:B7',
   },
 ];

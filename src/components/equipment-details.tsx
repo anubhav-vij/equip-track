@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server
 } from 'lucide-react';
 import type { Equipment, ServiceContract } from "@/lib/types";
 import {
@@ -216,6 +216,28 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                                 <p className="font-medium">{equipment.probe || 'N/A'}</p>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                 <Separator />
+                                <div>
+                                    <h4 className="text-lg font-medium mb-4">Network</h4>
+                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+                                        <div className="flex items-start gap-3">
+                                            {equipment.onNetwork ? <Wifi className="h-5 w-5 mt-1 text-green-600" /> : <WifiOff className="h-5 w-5 mt-1 text-red-600" />}
+                                            <div>
+                                                <p className="text-muted-foreground">On Network</p>
+                                                <p className="font-medium">{equipment.onNetwork ? 'Yes' : 'No'}</p>
+                                            </div>
+                                        </div>
+                                        {equipment.onNetwork && (
+                                            <div className="flex items-start gap-3">
+                                                <Server className="h-5 w-5 mt-1 text-primary" />
+                                                <div>
+                                                    <p className="text-muted-foreground">Computer Associated</p>
+                                                    <p className="font-medium">{equipment.computerAssociated}</p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <Separator />

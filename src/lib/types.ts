@@ -23,6 +23,8 @@ export interface Equipment {
   installedDate: string;
   node?: string;
   probe?: string;
+  onNetwork: boolean;
+  computerAssociated?: string;
 }
 
 export interface ServiceContract {

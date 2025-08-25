@@ -51,6 +51,16 @@ const formSchema = z.object({
   installedDate: z.date({ required_error: "Installed date is required." }),
   node: z.string().optional(),
   probe: z.string().optional(),
+  onNetwork: z.boolean().default(false),
+  computerAssociated: z.string().optional(),
+}).refine(data => {
+  if (data.onNetwork && !data.computerAssociated) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Computer/IP is required when On Network is checked.",
+  path: ["computerAssociated"],
 });
 
 type AddEquipmentFormProps = {
@@ -77,8 +87,12 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
       purchasingAmbisPoNumber: "",
       node: "",
       probe: "",
+      onNetwork: false,
+      computerAssociated: "",
     },
   });
+
+  const onNetwork = form.watch("onNetwork");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     onFormSubmit({
@@ -389,11 +403,11 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="transferred"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm col-span-2">
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                 <div className="space-y-0.5">
                   <FormLabel>Transferred</FormLabel>
                 </div>
@@ -406,6 +420,38 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="onNetwork"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>On Network</FormLabel>
+                </div>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          {onNetwork && (
+            <FormField
+              control={form.control}
+              name="computerAssociated"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel>Computer Associated (IP/MAC)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., 192.168.1.100" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
         <FormField
             control={form.control}
