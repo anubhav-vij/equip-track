@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Clock, Zap, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle
 } from 'lucide-react';
 import type { Equipment, ServiceContract } from "@/lib/types";
 import {
@@ -126,35 +126,35 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     <Building className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Department</p>
-                                        <p className="font-medium">{equipment.department || 'N/A'}</p>
+                                        <p className="font-medium">{equipment.department}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <Warehouse className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Room</p>
-                                        <p className="font-medium">{equipment.room || 'N/A'}</p>
+                                        <p className="font-medium">{equipment.room}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <Hash className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">NCI#</p>
-                                        <p className="font-medium">{equipment.nciNumber || 'N/A'}</p>
+                                        <p className="font-medium">{equipment.nciNumber}</p>
                                     </div>
                                 </div>
                                  <div className="flex items-start gap-3">
                                     <Hash className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">NIH#</p>
-                                        <p className="font-medium">{equipment.nihNumber || 'N/A'}</p>
+                                        <p className="font-medium">{equipment.nihNumber}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <Contact className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Point of Contact</p>
-                                        <p className="font-medium">{equipment.poc || 'N/A'}</p>
+                                        <p className="font-medium">{equipment.poc}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
@@ -172,20 +172,6 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Clock className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Operational Hours</p>
-                                        <p className="font-medium">{equipment.operationalHours?.toLocaleString() || 'N/A'}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <Zap className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Failure Rate</p>
-                                        <p className="font-medium">{equipment.failureRate ? `${(equipment.failureRate * 100).toFixed(2)}%` : 'N/A'}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
                                     {equipment.transferred ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
                                     <div>
                                         <p className="text-muted-foreground">Transferred</p>
@@ -198,7 +184,7 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     <StickyNote className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Notes</p>
-                                        <p className="font-medium whitespace-pre-wrap">{equipment.notes || 'N/A'}</p>
+                                        <p className="font-medium whitespace-pre-wrap">{equipment.notes}</p>
                                     </div>
                                 </div>
                             </CardContent>

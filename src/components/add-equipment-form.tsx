@@ -39,16 +39,14 @@ const formSchema = z.object({
   warrantyEndDate: z.date({ required_error: "Warranty end date is required." }),
   status: z.enum(['Active', 'In-Repair', 'Decommissioned']),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
-  operationalHours: z.coerce.number().min(0).optional(),
-  failureRate: z.coerce.number().min(0).max(1).optional(),
-  room: z.string().optional(),
-  department: z.string().optional(),
-  manufacturer: z.string().optional(),
-  nciNumber: z.string().optional(),
-  nihNumber: z.string().optional(),
-  transferred: z.boolean().optional(),
-  poc: z.string().optional(),
-  notes: z.string().optional(),
+  room: z.string().min(1, { message: "Room is required." }),
+  department: z.string().min(1, { message: "Department is required." }),
+  manufacturer: z.string().min(1, { message: "Manufacturer is required." }),
+  nciNumber: z.string().min(1, { message: "NCI number is required." }),
+  nihNumber: z.string().min(1, { message: "NIH number is required." }),
+  transferred: z.boolean().default(false),
+  poc: z.string().min(1, { message: "Point of contact is required." }),
+  notes: z.string().min(1, { message: "Notes are required." }),
 });
 
 type AddEquipmentFormProps = {
@@ -64,8 +62,6 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
       serialNumber: "",
       status: "Active",
       imageUrl: "",
-      operationalHours: 0,
-      failureRate: 0,
       room: "",
       department: "",
       manufacturer: "",
@@ -304,32 +300,6 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="operationalHours"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Operational Hours</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="e.g., 1500" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="failureRate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Failure Rate (%)</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="e.g., 0.05" step="0.01" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

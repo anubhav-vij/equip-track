@@ -15,8 +15,6 @@ import {z} from 'genkit';
 
 const SuggestMaintenanceScheduleInputSchema = z.object({
   equipmentType: z.string().describe('The type of equipment.'),
-  operationalHours: z.number().describe('The number of operational hours.'),
-  failureRate: z.number().describe('The failure rate of the equipment.'),
   environmentalFactors: z.string().describe('The environmental factors affecting the equipment.'),
   historicalMaintenanceData: z.string().describe('Historical maintenance data for the equipment.'),
 });
@@ -40,11 +38,9 @@ const suggestMaintenanceSchedulePrompt = ai.definePrompt({
   output: {schema: SuggestMaintenanceScheduleOutputSchema},
   prompt: `You are an expert maintenance schedule optimizer.
 
-  Based on the equipment's type, operational hours, failure rate, environmental factors and historical maintenance data, suggest an optimized maintenance schedule.
+  Based on the equipment's type, environmental factors and historical maintenance data, suggest an optimized maintenance schedule.
 
   Equipment Type: {{{equipmentType}}}
-  Operational Hours: {{{operationalHours}}}
-  Failure Rate: {{{failureRate}}}
   Environmental Factors: {{{environmentalFactors}}}
   Historical Maintenance Data: {{{historicalMaintenanceData}}}
 

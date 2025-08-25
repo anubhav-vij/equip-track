@@ -10,8 +10,6 @@ export const equipmentData: Equipment[] = [
     warrantyEndDate: '2024-01-15',
     status: 'Active',
     imageUrl: 'https://placehold.co/100x100.png',
-    operationalHours: 2500,
-    failureRate: 0.02,
     contracts: [
       { id: 'c1', provider: 'Stratasys Support', startDate: '2022-01-15', endDate: '2025-01-14', renewalDate: '2024-12-15', terms: 'Full coverage for parts and labor.' },
     ],
@@ -44,8 +42,6 @@ export const equipmentData: Equipment[] = [
     warrantyEndDate: '2023-03-20',
     status: 'Active',
     imageUrl: 'https://placehold.co/100x100.png',
-    operationalHours: 5800,
-    failureRate: 0.05,
     contracts: [],
     documents: [
       { id: 'd3', name: 'Haas VF-2 Manual.pdf', type: 'Manual', uploadDate: '2021-03-20', url: '#' },
@@ -74,8 +70,6 @@ export const equipmentData: Equipment[] = [
     warrantyEndDate: '2025-06-01',
     status: 'In-Repair',
     imageUrl: 'https://placehold.co/100x100.png',
-    operationalHours: 800,
-    failureRate: 0.01,
     contracts: [
       { id: 'c2', provider: 'Thermo Fisher Scientific', startDate: '2023-06-01', endDate: '2026-05-31', renewalDate: '2026-05-01', terms: 'Gold Support Plan with on-site service.' },
     ],

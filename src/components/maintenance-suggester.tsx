@@ -29,8 +29,6 @@ export function MaintenanceSuggester({ equipment }: { equipment: Equipment }) {
     try {
       const suggestion = await suggestMaintenanceSchedule({
         equipmentType: `${equipment.name} (${equipment.model})`,
-        operationalHours: equipment.operationalHours,
-        failureRate: equipment.failureRate,
         environmentalFactors: envFactors,
         historicalMaintenanceData: historicalData || "No historical data available.",
       });
@@ -57,16 +55,6 @@ export function MaintenanceSuggester({ equipment }: { equipment: Equipment }) {
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-               <div>
-                  <Label>Operational Hours</Label>
-                  <Input value={equipment.operationalHours} disabled />
-                </div>
-                <div>
-                  <Label>Failure Rate</Label>
-                  <Input value={equipment.failureRate} disabled />
-                </div>
-            </div>
             <div>
                 <Label htmlFor="env-factors">Environmental Factors</Label>
                 <Textarea id="env-factors" value={envFactors} onChange={(e) => setEnvFactors(e.target.value)} />
