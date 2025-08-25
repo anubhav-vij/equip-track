@@ -13,6 +13,14 @@ export interface Equipment {
   serviceLogs: ServiceLog[];
   operationalHours?: number;
   failureRate?: number;
+  room?: string;
+  department?: string;
+  manufacturer?: string;
+  nciNumber?: string;
+  nihNumber?: string;
+  transferred?: boolean;
+  poc?: string;
+  notes?: string;
 }
 
 export interface ServiceContract {

@@ -27,6 +27,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import type { Equipment } from '@/lib/types';
+import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
 
 
 const formSchema = z.object({
@@ -39,6 +41,14 @@ const formSchema = z.object({
   imageUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   operationalHours: z.coerce.number().min(0).optional(),
   failureRate: z.coerce.number().min(0).max(1).optional(),
+  room: z.string().optional(),
+  department: z.string().optional(),
+  manufacturer: z.string().optional(),
+  nciNumber: z.string().optional(),
+  nihNumber: z.string().optional(),
+  transferred: z.boolean().optional(),
+  poc: z.string().optional(),
+  notes: z.string().optional(),
 });
 
 type AddEquipmentFormProps = {
@@ -56,6 +66,14 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
       imageUrl: "",
       operationalHours: 0,
       failureRate: 0,
+      room: "",
+      department: "",
+      manufacturer: "",
+      nciNumber: "",
+      nihNumber: "",
+      transferred: false,
+      poc: "",
+      notes: "",
     },
   });
 
@@ -70,16 +88,29 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Equipment Name</FormLabel>
+                <FormLabel>Equipment Name (Description)</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., CNC Machine" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="manufacturer"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Manufacturer</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Haas" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,7 +123,7 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
               <FormItem>
                 <FormLabel>Model</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., Haas VF-2" {...field} />
+                  <Input placeholder="e.g., VF-2" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,6 +137,71 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
                 <FormLabel>Serial Number</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., SN-12345" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="department"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Manufacturing" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="room"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Room</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., C-205" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nciNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>NCI#</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., NCI-00124" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="nihNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>NIH#</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., NIH-98766" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="poc"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Point of Contact</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., John Miller" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -238,7 +334,37 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
               </FormItem>
             )}
           />
+           <FormField
+            control={form.control}
+            name="transferred"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm col-span-2">
+                <div className="space-y-0.5">
+                  <FormLabel>Transferred</FormLabel>
+                </div>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
         </div>
+        <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notes</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Any relevant notes..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         <Button type="submit" className="w-full">Add Equipment</Button>
       </form>
     </Form>

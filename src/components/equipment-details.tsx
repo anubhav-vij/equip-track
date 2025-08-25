@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Clock, Zap
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Clock, Zap, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle
 } from 'lucide-react';
 import type { Equipment, ServiceContract } from "@/lib/types";
 import {
@@ -12,6 +12,7 @@ import {
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -111,13 +112,49 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                         <Card>
                             <CardHeader>
                                 <CardTitle>Equipment Information</CardTitle>
+                                <CardDescription>{equipment.name} - {equipment.manufacturer} {equipment.model}</CardDescription>
                             </CardHeader>
-                            <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+                            <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-sm">
                                 <div className="flex items-start gap-3">
                                     <Info className="h-5 w-5 mt-1 text-primary" />
                                     <div>
                                         <p className="text-muted-foreground">Serial Number</p>
                                         <p className="font-medium">{equipment.serialNumber}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Building className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">Department</p>
+                                        <p className="font-medium">{equipment.department || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Warehouse className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">Room</p>
+                                        <p className="font-medium">{equipment.room || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Hash className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">NCI#</p>
+                                        <p className="font-medium">{equipment.nciNumber || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                 <div className="flex items-start gap-3">
+                                    <Hash className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">NIH#</p>
+                                        <p className="font-medium">{equipment.nihNumber || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Contact className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">Point of Contact</p>
+                                        <p className="font-medium">{equipment.poc || 'N/A'}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
@@ -146,6 +183,22 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     <div>
                                         <p className="text-muted-foreground">Failure Rate</p>
                                         <p className="font-medium">{equipment.failureRate ? `${(equipment.failureRate * 100).toFixed(2)}%` : 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    {equipment.transferred ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
+                                    <div>
+                                        <p className="text-muted-foreground">Transferred</p>
+                                        <p className="font-medium">{equipment.transferred ? 'Yes' : 'No'}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                            <CardContent>
+                                <div className="flex items-start gap-3">
+                                    <StickyNote className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">Notes</p>
+                                        <p className="font-medium whitespace-pre-wrap">{equipment.notes || 'N/A'}</p>
                                     </div>
                                 </div>
                             </CardContent>

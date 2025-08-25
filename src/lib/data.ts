@@ -26,6 +26,14 @@ export const equipmentData: Equipment[] = [
       { id: 'sl1', date: '2023-07-20', type: 'Preventative', technician: 'John Doe', notes: 'Completed annual preventative maintenance. Replaced print head and calibrated axes.' },
       { id: 'sl2', date: '2024-02-10', type: 'Repair', technician: 'Jane Smith', notes: 'Replaced faulty heating element. System is back online.' },
     ],
+    room: 'B-101',
+    department: 'R&D',
+    manufacturer: 'Stratasys',
+    nciNumber: 'NCI-00123',
+    nihNumber: 'NIH-98765',
+    transferred: false,
+    poc: 'Dr. Evelyn Reed',
+    notes: 'Primary printer for advanced polymer prototypes.'
   },
   {
     id: '2',
@@ -48,6 +56,14 @@ export const equipmentData: Equipment[] = [
     serviceLogs: [
       { id: 'sl3', date: '2023-09-01', type: 'Preventative', technician: 'Mike Rivera', notes: 'Quarterly maintenance check. Lubricated all moving parts and checked fluid levels.' },
     ],
+    room: 'C-205',
+    department: 'Manufacturing',
+    manufacturer: 'Haas Automation',
+    nciNumber: 'NCI-00124',
+    nihNumber: 'NIH-98766',
+    transferred: false,
+    poc: 'John Miller',
+    notes: 'Used for high-precision metal parts.'
   },
   {
     id: '3',
@@ -73,5 +89,13 @@ export const equipmentData: Equipment[] = [
     serviceLogs: [
         { id: 'sl4', date: '2024-05-15', type: 'Repair', technician: 'Support Team', notes: 'Laser assembly malfunction. Awaiting replacement part.' },
     ],
+    room: 'A-310',
+    department: 'Quality Assurance',
+    manufacturer: 'Thermo Fisher Scientific',
+    nciNumber: 'NCI-00125',
+    nihNumber: 'NIH-98767',
+    transferred: true,
+    poc: 'Dr. Sarah Chen',
+    notes: 'Critical for material analysis.'
   },
 ];
