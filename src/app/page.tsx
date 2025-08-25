@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo } from 'react';
-import { Blocks, PlusCircle, Search } from 'lucide-react';
+import { Blocks, PlusCircle, Search, Upload } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,7 @@ import { AddSoftwareForm } from '@/components/add-software-form';
 import { EditSoftwareForm } from '@/components/edit-software-form';
 import { AddServiceLogForm } from '@/components/add-service-log-form';
 import { EditServiceLogForm } from '@/components/edit-service-log-form';
+import { ImportDataDialog } from '@/components/import-data-dialog';
 
 
 export default function Home() {
@@ -48,6 +49,8 @@ export default function Home() {
   const [isAddLogDialogOpen, setIsAddLogDialogOpen] = useState(false);
   const [isEditLogDialogOpen, setIsEditLogDialogOpen] = useState(false);
   const [editingLog, setEditingLog] = useState<ServiceLog | null>(null);
+  
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
   const filteredEquipment = useMemo(() => {
     if (!searchQuery) return allEquipment;
@@ -218,6 +221,12 @@ export default function Home() {
     setEditingLog(log);
     setIsEditLogDialogOpen(true);
   };
+  
+  const handleImportData = (data: Equipment[]) => {
+    setAllEquipment(data);
+    setSelectedEquipment(data[0] || null);
+    setIsImportDialogOpen(false);
+  }
 
 
   return (
@@ -257,7 +266,22 @@ export default function Home() {
             ))}
           </nav>
         </ScrollArea>
-        <div className="p-4 border-t shrink-0">
+        <div className="p-4 border-t shrink-0 space-y-2">
+          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="w-full" variant="outline">
+                <Upload className="mr-2 h-4 w-4" />
+                Import Data
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Import Equipment Data</DialogTitle>
+              </DialogHeader>
+              <ImportDataDialog onImport={handleImportData} />
+            </DialogContent>
+          </Dialog>
+
           <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
               <Button className="w-full">
@@ -330,6 +354,36 @@ export default function Home() {
             <div className="text-center p-4">
               <h2 className="text-2xl font-semibold text-muted-foreground">Welcome to EquipTrack</h2>
               <p className="mt-2 text-muted-foreground">Select an equipment from the list or add a new one.</p>
+               <div className="mt-4 flex justify-center gap-2">
+                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                   <DialogTrigger asChild>
+                     <Button>
+                       <PlusCircle className="mr-2 h-4 w-4" />
+                       Add Equipment
+                     </Button>
+                   </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                       <DialogHeader>
+                         <DialogTitle>Add New Equipment</DialogTitle>
+                       </DialogHeader>
+                       <AddEquipmentForm onFormSubmit={handleAddEquipment} />
+                   </DialogContent>
+                 </Dialog>
+                  <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Import Data
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Import Equipment Data</DialogTitle>
+                      </DialogHeader>
+                      <ImportDataDialog onImport={handleImportData} />
+                    </DialogContent>
+                  </Dialog>
+               </div>
             </div>
           </div>
         )}
