@@ -37,8 +37,8 @@ const formSchema = z.object({
   warrantyEndDate: z.date({ required_error: "Warranty end date is required." }),
   status: z.enum(['Active', 'In-Repair', 'Decommissioned']),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
-  operationalHours: z.coerce.number().min(0),
-  failureRate: z.coerce.number().min(0).max(1),
+  operationalHours: z.coerce.number().min(0).optional(),
+  failureRate: z.coerce.number().min(0).max(1).optional(),
 });
 
 type AddEquipmentFormProps = {
@@ -219,7 +219,7 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
               <FormItem>
                 <FormLabel>Operational Hours</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="e.g., 1500" {...field} />
+                  <Input type="number" placeholder="e.g., 1500" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -232,7 +232,7 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
               <FormItem>
                 <FormLabel>Failure Rate (%)</FormLabel>
                 <FormControl>
-                  <Input type="number" placeholder="e.g., 0.05" step="0.01" {...field} />
+                  <Input type="number" placeholder="e.g., 0.05" step="0.01" {...field} onChange={e => field.onChange(e.target.value === '' ? undefined : +e.target.value)} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

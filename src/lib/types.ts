@@ -11,8 +11,8 @@ export interface Equipment {
   documents: Document[];
   software: Software[];
   serviceLogs: ServiceLog[];
-  operationalHours: number;
-  failureRate: number;
+  operationalHours?: number;
+  failureRate?: number;
 }
 
 export interface ServiceContract {

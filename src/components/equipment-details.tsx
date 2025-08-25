@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Clock, Zap
 } from 'lucide-react';
 import type { Equipment, ServiceContract } from "@/lib/types";
 import {
@@ -132,6 +132,20 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     <div>
                                         <p className="text-muted-foreground">Warranty End Date</p>
                                         <p className="font-medium">{formatDate(equipment.warrantyEndDate)}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Clock className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">Operational Hours</p>
+                                        <p className="font-medium">{equipment.operationalHours?.toLocaleString() || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <Zap className="h-5 w-5 mt-1 text-primary" />
+                                    <div>
+                                        <p className="text-muted-foreground">Failure Rate</p>
+                                        <p className="font-medium">{equipment.failureRate ? `${(equipment.failureRate * 100).toFixed(2)}%` : 'N/A'}</p>
                                     </div>
                                 </div>
                             </CardContent>
