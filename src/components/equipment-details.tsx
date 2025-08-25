@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive
 } from 'lucide-react';
 import type { Equipment, ServiceContract } from "@/lib/types";
 import {
@@ -99,8 +99,9 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
         <ScrollArea className="flex-1">
             <div className="p-4 md:p-6">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 mb-6">
+                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 mb-6">
                         <TabsTrigger value="overview"><Info className="mr-1.5 h-4 w-4" />Overview</TabsTrigger>
+                        <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>
                         <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />Contracts</TabsTrigger>
                         <TabsTrigger value="documents"><FileText className="mr-1.5 h-4 w-4" />Documents</TabsTrigger>
                         <TabsTrigger value="software"><Cpu className="mr-1.5 h-4 w-4" />Software</TabsTrigger>
@@ -158,20 +159,6 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Calendar className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Purchase Date</p>
-                                        <p className="font-medium">{formatDate(equipment.purchaseDate)}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <ShieldCheck className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Warranty End Date</p>
-                                        <p className="font-medium">{formatDate(equipment.warrantyEndDate)}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
                                     {equipment.transferred ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
                                     <div>
                                         <p className="text-muted-foreground">Transferred</p>
@@ -188,6 +175,45 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                     </div>
                                 </div>
                             </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                     <TabsContent value="acquisition">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Acquisition Details</CardTitle>
+                            <CardDescription>Information about the procurement and warranty of the equipment.</CardDescription>
+                          </CardHeader>
+                          <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-sm">
+                            <div className="flex items-start gap-3">
+                                <Calendar className="h-5 w-5 mt-1 text-primary" />
+                                <div>
+                                    <p className="text-muted-foreground">Acquisition Date</p>
+                                    <p className="font-medium">{formatDate(equipment.purchaseDate)}</p>
+                                </div>
+                            </div>
+                             <div className="flex items-start gap-3">
+                                <Calendar className="h-5 w-5 mt-1 text-primary" />
+                                <div>
+                                    <p className="text-muted-foreground">Installed Date</p>
+                                    <p className="font-medium">{formatDate(equipment.installedDate)}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <ShieldCheck className="h-5 w-5 mt-1 text-primary" />
+                                <div>
+                                    <p className="text-muted-foreground">WARRANTY EXP:</p>
+                                    <p className="font-medium">{formatDate(equipment.warrantyEndDate)}</p>
+                                </div>
+                            </div>
+                             <div className="flex items-start gap-3">
+                                <CaseSensitive className="h-5 w-5 mt-1 text-primary" />
+                                <div>
+                                    <p className="text-muted-foreground">Purchasing AMBIS#/PO#</p>
+                                    <p className="font-medium">{equipment.purchasingAmbisPoNumber}</p>
+                                </div>
+                            </div>
+                          </CardContent>
                         </Card>
                     </TabsContent>
 

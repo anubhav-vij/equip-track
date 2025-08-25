@@ -31,7 +31,9 @@ export const equipmentData: Equipment[] = [
     nihNumber: 'NIH-98765',
     transferred: false,
     poc: 'Dr. Evelyn Reed',
-    notes: 'Primary printer for advanced polymer prototypes.'
+    notes: 'Primary printer for advanced polymer prototypes.',
+    purchasingAmbisPoNumber: 'PO-2022-001',
+    installedDate: '2022-01-20',
   },
   {
     id: '2',
@@ -59,7 +61,9 @@ export const equipmentData: Equipment[] = [
     nihNumber: 'NIH-98766',
     transferred: false,
     poc: 'John Miller',
-    notes: 'Used for high-precision metal parts.'
+    notes: 'Used for high-precision metal parts.',
+    purchasingAmbisPoNumber: 'PO-2021-002',
+    installedDate: '2021-03-25',
   },
   {
     id: '3',
@@ -90,6 +94,8 @@ export const equipmentData: Equipment[] = [
     nihNumber: 'NIH-98767',
     transferred: true,
     poc: 'Dr. Sarah Chen',
-    notes: 'Critical for material analysis.'
+    notes: 'Critical for material analysis.',
+    purchasingAmbisPoNumber: 'PO-2023-003',
+    installedDate: '2023-06-05',
   },
 ];

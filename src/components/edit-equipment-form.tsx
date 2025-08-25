@@ -48,6 +48,8 @@ const formSchema = z.object({
   transferred: z.boolean().default(false),
   poc: z.string().min(1, { message: "Point of contact is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
+  purchasingAmbisPoNumber: z.string().min(1, { message: "Purchasing AMBIS#/PO# is required." }),
+  installedDate: z.date({ required_error: "Installed date is required." }),
 });
 
 type EditEquipmentFormProps = {
@@ -62,6 +64,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       ...equipment,
       purchaseDate: parseISO(equipment.purchaseDate),
       warrantyEndDate: parseISO(equipment.warrantyEndDate),
+      installedDate: parseISO(equipment.installedDate),
     },
   });
 
@@ -71,6 +74,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       ...values,
       purchaseDate: format(values.purchaseDate, 'yyyy-MM-dd'),
       warrantyEndDate: format(values.warrantyEndDate, 'yyyy-MM-dd'),
+      installedDate: format(values.installedDate, 'yyyy-MM-dd'),
       imageUrl: values.imageUrl || 'https://placehold.co/100x100.png',
     });
   }
@@ -293,6 +297,57 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
                     />
                   </PopoverContent>
                 </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="installedDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Installed Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="purchasingAmbisPoNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Purchasing AMBIS#/PO#</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., PO-12345" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

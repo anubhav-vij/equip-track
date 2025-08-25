@@ -19,6 +19,8 @@ export interface Equipment {
   transferred: boolean;
   poc: string;
   notes: string;
+  purchasingAmbisPoNumber: string;
+  installedDate: string;
 }
 
 export interface ServiceContract {
