@@ -55,6 +55,7 @@ const formSchema = z.object({
   probe: z.string().optional(),
   onNetwork: z.enum(['true', 'false'], { required_error: 'You must select whether the equipment is on the network.' }).transform(value => value === 'true'),
   computerAssociated: z.string().optional(),
+  hasServiceContract: z.enum(['true', 'false'], { required_error: 'You must select whether the equipment has a service contract.' }).transform(value => value === 'true'),
 }).refine(data => {
   if (data.onNetwork && !data.computerAssociated) {
     return false;
@@ -82,6 +83,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       node: equipment.node || "",
       probe: equipment.probe || "",
       onNetwork: equipment.onNetwork.toString() as 'true' | 'false',
+      hasServiceContract: equipment.hasServiceContract.toString() as 'true' | 'false',
       computerAssociated: equipment.computerAssociated || "",
     },
   });
@@ -417,6 +419,36 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
           />
           <FormField
             control={form.control}
+            name="hasServiceContract"
+            render={({ field }) => (
+              <FormItem className="space-y-3 rounded-lg border p-3 shadow-sm">
+                <FormLabel>Service Contract?</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value?.toString()}
+                    className="flex space-x-4"
+                  >
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="true" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="false" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="onNetwork"
             render={({ field }) => (
               <FormItem className="space-y-3 rounded-lg border p-3 shadow-sm">
@@ -450,7 +482,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
               control={form.control}
               name="computerAssociated"
               render={({ field }) => (
-                <FormItem className="col-span-2">
+                <FormItem>
                   <FormLabel>Computer Associated (IP/MAC)</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g., 192.168.1.100" {...field} />
@@ -479,5 +511,3 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
     </Form>
   );
 }
-
-    

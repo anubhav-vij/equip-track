@@ -22,18 +22,15 @@ import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import type { ServiceContract } from '@/lib/types';
 import { Textarea } from './ui/textarea';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Checkbox } from './ui/checkbox';
 
 
 const formSchema = z.object({
-  provider: z.string().min(2, { message: "Service vendor is required." }),
-  startDate: z.date({ required_error: "Start date is required." }),
-  endDate: z.date({ required_error: "End date is required." }),
-  renewalDate: z.date({ required_error: "Renewal date is required." }),
+  provider: z.string().optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
+  renewalDate: z.date().optional(),
   terms: z.string().optional(),
-  
-  hasServiceContract: z.enum(['true', 'false'], { required_error: 'You must select an option.' }).transform(value => value === 'true'),
   numberOfPreventativeMaintenance: z.coerce.number().optional(),
   preventativeMaintenanceDoneDate: z.date().optional(),
   preventativeMaintenanceDueDate: z.date().optional(),
@@ -66,9 +63,9 @@ export function AddServiceContractForm({ onFormSubmit }: AddServiceContractFormP
   function onSubmit(values: z.infer<typeof formSchema>) {
     onFormSubmit({
       ...values,
-      startDate: format(values.startDate, 'yyyy-MM-dd'),
-      endDate: format(values.endDate, 'yyyy-MM-dd'),
-      renewalDate: format(values.renewalDate, 'yyyy-MM-dd'),
+      startDate: values.startDate ? format(values.startDate, 'yyyy-MM-dd') : undefined,
+      endDate: values.endDate ? format(values.endDate, 'yyyy-MM-dd') : undefined,
+      renewalDate: values.renewalDate ? format(values.renewalDate, 'yyyy-MM-dd') : undefined,
       preventativeMaintenanceDoneDate: values.preventativeMaintenanceDoneDate ? format(values.preventativeMaintenanceDoneDate, 'yyyy-MM-dd') : undefined,
       preventativeMaintenanceDueDate: values.preventativeMaintenanceDueDate ? format(values.preventativeMaintenanceDueDate, 'yyyy-MM-dd') : undefined,
       poStartDate: values.poStartDate ? format(values.poStartDate, 'yyyy-MM-dd') : undefined,
@@ -80,36 +77,6 @@ export function AddServiceContractForm({ onFormSubmit }: AddServiceContractFormP
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto p-1">
-        <FormField
-          control={form.control}
-          name="hasServiceContract"
-          render={({ field }) => (
-            <FormItem className="space-y-3 rounded-lg border p-3 shadow-sm">
-              <FormLabel>Svc Cntrct?</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value?.toString()}
-                  className="flex space-x-4"
-                >
-                  <FormItem className="flex items-center space-x-2 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="true" />
-                    </FormControl>
-                    <FormLabel className="font-normal">Yes</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-2 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="false" />
-                    </FormControl>
-                    <FormLabel className="font-normal">No</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}

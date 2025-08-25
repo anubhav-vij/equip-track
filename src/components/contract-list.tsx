@@ -1,9 +1,10 @@
+
 import type { ServiceContract } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { differenceInDays, parseISO, format } from 'date-fns';
-import { MoreVertical, Pencil, Plus, Trash2, CheckCircle, XCircle } from "lucide-react";
+import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,7 +33,9 @@ type ContractListProps = {
 
 export function ContractList({ contracts, onAddContract, onEditContract, onDeleteContract }: ContractListProps) {
 
-  const getStatus = (endDate: string, renewalDate: string) => {
+  const getStatus = (endDate?: string, renewalDate?: string) => {
+    if (!endDate || !renewalDate) return null;
+    
     const today = new Date();
     const end = parseISO(endDate);
     const renewal = parseISO(renewalDate);
@@ -52,6 +55,7 @@ export function ContractList({ contracts, onAddContract, onEditContract, onDelet
   }
 
   const sortedContracts = [...contracts].sort((a, b) => {
+    if (!a.startDate || !b.startDate) return 0;
     return parseISO(b.startDate).getTime() - parseISO(a.startDate).getTime();
   });
 
@@ -76,13 +80,9 @@ export function ContractList({ contracts, onAddContract, onEditContract, onDelet
           <Card key={contract.id} className="bg-muted/30">
             <CardHeader className="flex-row justify-between items-start">
               <div>
-                <CardTitle className="text-lg">{contract.provider}</CardTitle>
+                <CardTitle className="text-lg">{contract.provider || 'N/A'}</CardTitle>
                 <div className="flex items-center gap-4 text-sm mt-1">
                   {getStatus(contract.endDate, contract.renewalDate)}
-                   <div className="flex items-center gap-2">
-                      {contract.hasServiceContract ? <CheckCircle className="h-4 w-4 text-green-600" /> : <XCircle className="h-4 w-4 text-red-600" />}
-                      <span>Service Contract</span>
-                   </div>
                 </div>
               </div>
               <DropdownMenu>

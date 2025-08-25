@@ -1,3 +1,4 @@
+
 export interface Equipment {
   id: string;
   name: string;
@@ -25,18 +26,16 @@ export interface Equipment {
   probe?: string;
   onNetwork: boolean;
   computerAssociated?: string;
+  hasServiceContract: boolean;
 }
 
 export interface ServiceContract {
   id: string;
-  provider: string; // Will be repurposed for Service Vendor
-  startDate: string;
-  endDate: string;
-  terms: string;
-  renewalDate: string;
-
-  // New fields
-  hasServiceContract: boolean;
+  provider?: string; 
+  startDate?: string;
+  endDate?: string;
+  terms?: string;
+  renewalDate?: string;
   numberOfPreventativeMaintenance?: number;
   preventativeMaintenanceDoneDate?: string;
   preventativeMaintenanceDueDate?: string;

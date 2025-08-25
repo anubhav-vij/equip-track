@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import {
   Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server
@@ -194,6 +195,13 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                             <div>
                                                 <p className="text-muted-foreground">Transferred</p>
                                                 <p className="font-medium">{equipment.transferred ? 'Yes' : 'No'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            {equipment.hasServiceContract ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
+                                            <div>
+                                                <p className="text-muted-foreground">Service Contract</p>
+                                                <p className="font-medium">{equipment.hasServiceContract ? 'Yes' : 'No'}</p>
                                             </div>
                                         </div>
                                     </div>
