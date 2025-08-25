@@ -767,5 +767,61 @@ export const equipmentData: Equipment[] = [
     installedDate: '2024-02-25',
     onNetwork: true,
     computerAssociated: '192.168.1.125'
-  }
+  },
+  ...Array.from({ length: 75 }, (_, i) => {
+    const id = 26 + i;
+    const purchaseYear = 2020 + (i % 5);
+    const hasContract = Math.random() > 0.4;
+    const onNetwork = Math.random() > 0.5;
+    const statusOptions: ('Active' | 'In-Repair' | 'Decommissioned')[] = ['Active', 'Active', 'Active', 'In-Repair', 'Decommissioned'];
+    return {
+      id: `${id}`,
+      name: `Equipment ${id}`,
+      model: `Model-X${id}`,
+      serialNumber: `SN-EQ-${1000 + id}`,
+      purchaseDate: `${purchaseYear}-01-15`,
+      warrantyEndDate: `${purchaseYear + 2}-01-15`,
+      status: statusOptions[i % 5],
+      imageUrl: 'https://placehold.co/100x100.png',
+      hasServiceContract: hasContract,
+      contracts: hasContract ? [
+        {
+          id: `c-${id}`,
+          provider: `Vendor ${id}`,
+          startDate: `${purchaseYear + 2}-01-15`,
+          endDate: `${purchaseYear + 3}-01-14`,
+          renewalDate: `${purchaseYear + 2}-12-15`,
+          terms: 'Standard coverage.',
+          annualCost: 1000 + (i * 50),
+          vendorPoc: `Vendor POC ${id}`
+        }
+      ] : [],
+      documents: [
+        { id: `d-${id}`, name: `Manual_${id}.pdf`, type: 'Manual' as const, uploadDate: `${purchaseYear}-01-15`, url: '#' },
+      ],
+      software: onNetwork ? [
+        { id: `s-${id}`, name: `Control Software ${id}`, version: `${i % 3 + 1}.0`, licenseKey: `LICENSE-${id}`, installDate: `${purchaseYear}-01-20` },
+      ] : [],
+      serviceLogs: [
+        { id: `sl-${id}-1`, date: `${purchaseYear + 1}-06-10`, type: 'Preventative' as const, technician: 'Tech A', notes: 'Routine check-up.' },
+        ... (i % 4 === 0 ? [{ id: `sl-${id}-2`, date: `${purchaseYear + 2}-03-05`, type: 'Repair' as const, technician: 'Tech B', notes: 'Component replaced.' }] : [])
+      ],
+      room: `R-${100 + (i % 20)}`,
+      department: `Dept-${String.fromCharCode(65 + (i % 10))}`,
+      manufacturer: `Manufacturer ${String.fromCharCode(65 + (i % 15))}`,
+      nciNumber: `NCI-00${300 + id}`,
+      nihNumber: `NIH-98${900 + id}`,
+      transferred: i % 10 === 0,
+      poc: `User ${id}`,
+      notes: `Note for equipment ${id}.`,
+      purchasingAmbisPoNumber: `PO-${purchaseYear}-${id}`,
+      installedDate: `${purchaseYear}-01-20`,
+      node: onNetwork && i % 3 === 0 ? `N-${150+i}` : undefined,
+      probe: onNetwork && i % 3 === 0 ? `P-${500+i}`: undefined,
+      onNetwork: onNetwork,
+      computerAssociated: onNetwork ? `192.168.1.${126 + i}` : undefined
+    }
+  })
 ];
+
+    
