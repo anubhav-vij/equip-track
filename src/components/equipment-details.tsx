@@ -130,7 +130,7 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                                         <div className="flex items-start gap-3">
                                             <Building className="h-5 w-5 mt-1 text-primary" />
                                             <div>
-                                                <p className="text-muted-foreground">MFG</p>
+                                                <p className="text-muted-foreground">Manufacturer</p>
                                                 <p className="font-medium">{equipment.manufacturer}</p>
                                             </div>
                                         </div>
