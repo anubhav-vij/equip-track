@@ -50,6 +50,8 @@ const formSchema = z.object({
   notes: z.string().min(1, { message: "Notes are required." }),
   purchasingAmbisPoNumber: z.string().min(1, { message: "Purchasing AMBIS#/PO# is required." }),
   installedDate: z.date({ required_error: "Installed date is required." }),
+  node: z.string().optional(),
+  probe: z.string().optional(),
 });
 
 type EditEquipmentFormProps = {
@@ -65,6 +67,8 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       purchaseDate: parseISO(equipment.purchaseDate),
       warrantyEndDate: parseISO(equipment.warrantyEndDate),
       installedDate: parseISO(equipment.installedDate),
+      node: equipment.node || "",
+      probe: equipment.probe || "",
     },
   });
 
@@ -347,6 +351,32 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
                 <FormLabel>Purchasing AMBIS#/PO#</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., PO-12345" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="node"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Node</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., N-123" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="probe"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Probe</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., P-456" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

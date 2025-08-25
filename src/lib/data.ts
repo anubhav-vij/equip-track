@@ -34,6 +34,8 @@ export const equipmentData: Equipment[] = [
     notes: 'Primary printer for advanced polymer prototypes.',
     purchasingAmbisPoNumber: 'PO-2022-001',
     installedDate: '2022-01-20',
+    node: 'N-123',
+    probe: 'P-456',
   },
   {
     id: '2',

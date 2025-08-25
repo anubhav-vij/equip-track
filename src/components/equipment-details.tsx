@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch
 } from 'lucide-react';
 import type { Equipment, ServiceContract } from "@/lib/types";
 import {
@@ -26,6 +26,7 @@ import { ContractList } from './contract-list';
 import { SoftwareList } from './software-list';
 import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
+import { Separator } from "./ui/separator";
 
 type EquipmentDetailsProps = {
   equipment: Equipment;
@@ -113,60 +114,111 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                         <Card>
                             <CardHeader>
                                 <CardTitle>Equipment Information</CardTitle>
-                                <CardDescription>{equipment.name} - {equipment.manufacturer} {equipment.model}</CardDescription>
+                                <CardDescription>Location, identifiers, and general information about the equipment.</CardDescription>
                             </CardHeader>
-                            <CardContent className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-sm">
-                                <div className="flex items-start gap-3">
-                                    <Info className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Serial Number</p>
-                                        <p className="font-medium">{equipment.serialNumber}</p>
+                            <CardContent className="space-y-6">
+                                <div>
+                                    <h4 className="text-lg font-medium mb-4">Instrument</h4>
+                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+                                        <div className="flex items-start gap-3">
+                                            <Info className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Description</p>
+                                                <p className="font-medium">{equipment.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Building className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">MFG</p>
+                                                <p className="font-medium">{equipment.manufacturer}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Info className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Model</p>
+                                                <p className="font-medium">{equipment.model}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <CaseSensitive className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Serial #</p>
+                                                <p className="font-medium">{equipment.serialNumber}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Contact className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">POC</p>
+                                                <p className="font-medium">{equipment.poc}</p>
+                                            </div>
+                                        </div>
+                                         <div className="flex items-start gap-3">
+                                            <Warehouse className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Room</p>
+                                                <p className="font-medium">{equipment.room}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Building className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Department</p>
+                                                <p className="font-medium">{equipment.department}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <Building className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Department</p>
-                                        <p className="font-medium">{equipment.department}</p>
+                                <Separator />
+                                <div>
+                                    <h4 className="text-lg font-medium mb-4">Property Tag</h4>
+                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+                                        <div className="flex items-start gap-3">
+                                            <Hash className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">NCI#</p>
+                                                <p className="font-medium">{equipment.nciNumber}</p>
+                                            </div>
+                                        </div>
+                                         <div className="flex items-start gap-3">
+                                            <Hash className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">NIH#</p>
+                                                <p className="font-medium">{equipment.nihNumber}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            {equipment.transferred ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
+                                            <div>
+                                                <p className="text-muted-foreground">Transferred</p>
+                                                <p className="font-medium">{equipment.transferred ? 'Yes' : 'No'}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <Warehouse className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Room</p>
-                                        <p className="font-medium">{equipment.room}</p>
+                                <Separator />
+                                <div>
+                                    <h4 className="text-lg font-medium mb-4">Reese</h4>
+                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
+                                        <div className="flex items-start gap-3">
+                                            <SatelliteDish className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Node</p>
+                                                <p className="font-medium">{equipment.node || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                         <div className="flex items-start gap-3">
+                                            <GitBranch className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Probe</p>
+                                                <p className="font-medium">{equipment.probe || 'N/A'}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <Hash className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">NCI#</p>
-                                        <p className="font-medium">{equipment.nciNumber}</p>
-                                    </div>
-                                </div>
-                                 <div className="flex items-start gap-3">
-                                    <Hash className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">NIH#</p>
-                                        <p className="font-medium">{equipment.nihNumber}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    <Contact className="h-5 w-5 mt-1 text-primary" />
-                                    <div>
-                                        <p className="text-muted-foreground">Point of Contact</p>
-                                        <p className="font-medium">{equipment.poc}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3">
-                                    {equipment.transferred ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
-                                    <div>
-                                        <p className="text-muted-foreground">Transferred</p>
-                                        <p className="font-medium">{equipment.transferred ? 'Yes' : 'No'}</p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                            <CardContent>
+                                <Separator />
                                 <div className="flex items-start gap-3">
                                     <StickyNote className="h-5 w-5 mt-1 text-primary" />
                                     <div>
@@ -245,5 +297,5 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
             </div>
         </ScrollArea>
     </div>
-  )
+  );
 }

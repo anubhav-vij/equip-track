@@ -21,6 +21,8 @@ export interface Equipment {
   notes: string;
   purchasingAmbisPoNumber: string;
   installedDate: string;
+  node?: string;
+  probe?: string;
 }
 
 export interface ServiceContract {
