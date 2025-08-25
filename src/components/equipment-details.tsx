@@ -202,7 +202,7 @@ export function EquipmentDetails({ equipment, onEdit, onAddContract, onEditContr
                             <div className="flex items-start gap-3">
                                 <ShieldCheck className="h-5 w-5 mt-1 text-primary" />
                                 <div>
-                                    <p className="text-muted-foreground">WARRANTY EXP:</p>
+                                    <p className="text-muted-foreground">Warranty Exp Date</p>
                                     <p className="font-medium">{formatDate(equipment.warrantyEndDate)}</p>
                                 </div>
                             </div>
