@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import type { Equipment } from '@/lib/types';
 import { Textarea } from './ui/textarea';
 import { Checkbox } from './ui/checkbox';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 
 
 const formSchema = z.object({
@@ -52,7 +53,7 @@ const formSchema = z.object({
   installedDate: z.date({ required_error: "Installed date is required." }),
   node: z.string().optional(),
   probe: z.string().optional(),
-  onNetwork: z.boolean().default(false),
+  onNetwork: z.enum(['true', 'false'], { required_error: 'You must select whether the equipment is on the network.' }).transform(value => value === 'true'),
   computerAssociated: z.string().optional(),
 }).refine(data => {
   if (data.onNetwork && !data.computerAssociated) {
@@ -80,7 +81,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       installedDate: parseISO(equipment.installedDate),
       node: equipment.node || "",
       probe: equipment.probe || "",
-      onNetwork: equipment.onNetwork || false,
+      onNetwork: equipment.onNetwork.toString() as 'true' | 'false',
       computerAssociated: equipment.computerAssociated || "",
     },
   });
@@ -418,20 +419,33 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
             control={form.control}
             name="onNetwork"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                <div className="space-y-0.5">
-                  <FormLabel>On Network</FormLabel>
-                </div>
+              <FormItem className="space-y-3 rounded-lg border p-3 shadow-sm">
+                <FormLabel>On Network?</FormLabel>
                 <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value?.toString()}
+                    className="flex space-x-4"
+                  >
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="true" />
+                      </FormControl>
+                      <FormLabel className="font-normal">Yes</FormLabel>
+                    </FormItem>
+                    <FormItem className="flex items-center space-x-2 space-y-0">
+                      <FormControl>
+                        <RadioGroupItem value="false" />
+                      </FormControl>
+                      <FormLabel className="font-normal">No</FormLabel>
+                    </FormItem>
+                  </RadioGroup>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
-          {onNetwork && (
+          {onNetwork?.toString() === 'true' && (
             <FormField
               control={form.control}
               name="computerAssociated"
@@ -465,3 +479,5 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
     </Form>
   );
 }
+
+    
