@@ -53,6 +53,11 @@ export function EditServiceContractForm({ contract, onFormSubmit }: EditServiceC
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...contract,
+      provider: contract.provider || "",
+      terms: contract.terms || "",
+      poNumber: contract.poNumber || "",
+      poLineNumber: contract.poLineNumber || "",
+      vendorPoc: contract.vendorPoc || "",
       startDate: contract.startDate ? parseISO(contract.startDate) : undefined,
       endDate: contract.endDate ? parseISO(contract.endDate) : undefined,
       renewalDate: contract.renewalDate ? parseISO(contract.renewalDate) : undefined,
@@ -462,3 +467,5 @@ export function EditServiceContractForm({ contract, onFormSubmit }: EditServiceC
     </Form>
   );
 }
+
+    

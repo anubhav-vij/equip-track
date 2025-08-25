@@ -57,6 +57,8 @@ export function AddServiceContractForm({ onFormSubmit }: AddServiceContractFormP
       poLineNumber: "",
       vendorPoc: "",
       creditUnusedCoverage: false,
+      numberOfPreventativeMaintenance: undefined,
+      annualCost: undefined,
     },
   });
 
@@ -458,3 +460,5 @@ export function AddServiceContractForm({ onFormSubmit }: AddServiceContractFormP
     </Form>
   );
 }
+
+    
