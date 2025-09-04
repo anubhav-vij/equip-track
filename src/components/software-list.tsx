@@ -32,8 +32,13 @@ type SoftwareListProps = {
 
 export function SoftwareList({ software, onAddSoftware, onEditSoftware, onDeleteSoftware }: SoftwareListProps) {
 
-  const formatDate = (dateString: string) => {
-    return format(parseISO(dateString), 'PPP');
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    try {
+      return format(parseISO(dateString), 'PPP');
+    } catch (error) {
+      return dateString;
+    }
   }
 
   return (
@@ -53,6 +58,7 @@ export function SoftwareList({ software, onAddSoftware, onEditSoftware, onDelete
               <TableHead>Version</TableHead>
               <TableHead>License Key</TableHead>
               <TableHead>Install Date</TableHead>
+              <TableHead>Expiration Date</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -63,6 +69,7 @@ export function SoftwareList({ software, onAddSoftware, onEditSoftware, onDelete
                 <TableCell>{s.version}</TableCell>
                 <TableCell>{s.licenseKey}</TableCell>
                 <TableCell>{formatDate(s.installDate)}</TableCell>
+                <TableCell>{formatDate(s.expirationDate)}</TableCell>
                 <TableCell className="text-right">
                    <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -101,7 +108,7 @@ export function SoftwareList({ software, onAddSoftware, onEditSoftware, onDelete
               </TableRow>
             )) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center h-24">No software tracked.</TableCell>
+                <TableCell colSpan={6} className="text-center h-24">No software tracked.</TableCell>
               </TableRow>
             )}
           </TableBody>

@@ -45,7 +45,7 @@ export const equipmentData: Equipment[] = [
       { id: 'd2', name: 'Warranty Certificate.pdf', type: 'Warranty', uploadDate: '2022-01-15', url: '#' },
     ],
     software: [
-      { id: 's1', name: 'GrabCAD Print', version: '1.57', licenseKey: 'LICENSE-GC-XYZ', installDate: '2022-01-15' },
+      { id: 's1', name: 'GrabCAD Print', version: '1.57', licenseKey: 'LICENSE-GC-XYZ', installDate: '2022-01-15', expirationDate: '2025-01-15' },
     ],
     serviceLogs: [
       { id: 'sl1', date: '2023-07-20', type: 'Preventative', technician: 'John Doe', notes: 'Completed annual preventative maintenance. Replaced print head and calibrated axes.' },
@@ -125,7 +125,7 @@ export const equipmentData: Equipment[] = [
         { id: 'd5', name: 'Purchase Invoice.pdf', type: 'Invoice', uploadDate: '2023-06-01', url: '#' },
     ],
     software: [
-      { id: 's3', name: 'OMNIC Software', version: '9.12', licenseKey: 'LICENSE-OMNIC-ABC', installDate: '2023-06-01' },
+      { id: 's3', name: 'OMNIC Software', version: '9.12', licenseKey: 'LICENSE-OMNIC-ABC', installDate: '2023-06-01', expirationDate: '2026-06-01' },
     ],
     serviceLogs: [
         { id: 'sl4', date: '2024-05-15', type: 'Repair', technician: 'Support Team', notes: 'Laser assembly malfunction. Awaiting replacement part.' },
@@ -823,5 +823,3 @@ export const equipmentData: Equipment[] = [
     }
   })
 ];
-
-    

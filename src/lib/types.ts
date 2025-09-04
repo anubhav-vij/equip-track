@@ -62,6 +62,7 @@ export interface Software {
   version: string;
   licenseKey: string;
   installDate: string;
+  expirationDate?: string;
 }
 
 export interface ServiceLog {

@@ -28,6 +28,7 @@ const formSchema = z.object({
   version: z.string().min(1, { message: "Version is required." }),
   licenseKey: z.string().min(1, { message: "License key is required." }),
   installDate: z.date({ required_error: "Install date is required." }),
+  expirationDate: z.date().optional(),
 });
 
 type EditSoftwareFormProps = {
@@ -41,6 +42,7 @@ export function EditSoftwareForm({ software, onFormSubmit }: EditSoftwareFormPro
     defaultValues: {
       ...software,
       installDate: parseISO(software.installDate),
+      expirationDate: software.expirationDate ? parseISO(software.expirationDate) : undefined,
     },
   });
 
@@ -49,6 +51,7 @@ export function EditSoftwareForm({ software, onFormSubmit }: EditSoftwareFormPro
       ...software,
       ...values,
       installDate: format(values.installDate, 'yyyy-MM-dd'),
+      expirationDate: values.expirationDate ? format(values.expirationDate, 'yyyy-MM-dd') : undefined,
     });
   }
 
@@ -100,6 +103,44 @@ export function EditSoftwareForm({ software, onFormSubmit }: EditSoftwareFormPro
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Install Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="expirationDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Expiration Date (Optional)</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
