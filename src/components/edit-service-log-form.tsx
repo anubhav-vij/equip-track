@@ -29,15 +29,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import type { ServiceLog } from '@/lib/types';
-import { Checkbox } from './ui/checkbox';
 
 
 const formSchema = z.object({
   date: z.date({ required_error: "Date is required." }),
-  type: z.enum(['Preventative', 'Repair', 'Inspection']),
+  type: z.enum(['Request', 'Preventative', 'Repair', 'Inspection']),
+  status: z.enum(['Requested', 'Approved', 'In Progress', 'Completed', 'Rejected']),
   technician: z.string().min(1, { message: "Technician name is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
-  completed: z.boolean().default(false),
 });
 
 type EditServiceLogFormProps = {
@@ -116,9 +115,34 @@ export function EditServiceLogForm({ log, onFormSubmit }: EditServiceLogFormProp
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
+                  <SelectItem value="Request">Request</SelectItem>
                   <SelectItem value="Preventative">Preventative</SelectItem>
                   <SelectItem value="Repair">Repair</SelectItem>
                   <SelectItem value="Inspection">Inspection</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="Requested">Requested</SelectItem>
+                  <SelectItem value="Approved">Approved</SelectItem>
+                  <SelectItem value="In Progress">In Progress</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                  <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -148,23 +172,6 @@ export function EditServiceLogForm({ log, onFormSubmit }: EditServiceLogFormProp
                 <Textarea placeholder="Describe the work performed..." {...field} />
               </FormControl>
               <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="completed"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-              <div className="space-y-0.5">
-                <FormLabel>Service Completed</FormLabel>
-              </div>
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
             </FormItem>
           )}
         />

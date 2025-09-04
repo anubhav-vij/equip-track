@@ -1,9 +1,9 @@
 
 "use client"
 import { useState } from 'react';
-import { Loader2, Sparkles, Plus, Wrench, Calendar, MoreVertical, Pencil, Trash2, CheckCircle, Circle } from 'lucide-react';
+import { Loader2, Sparkles, Plus, Wrench, Calendar, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { summarizeServiceReports, SummarizeServiceReportsOutput } from '@/ai/flows/summarize-service-reports';
-import type { ServiceLog } from '@/lib/types';
+import type { ServiceLog, ServiceLogStatus } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -71,12 +71,24 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
     }
   };
 
-  const getBadgeVariant = (type: ServiceLog['type']) => {
+  const getLogTypeBadgeVariant = (type: ServiceLog['type']) => {
     switch(type) {
-      case 'Preventative': return 'default';
+      case 'Request': return 'default';
+      case 'Preventative': return 'secondary';
       case 'Repair': return 'destructive';
-      case 'Inspection': return 'secondary';
+      case 'Inspection': return 'outline';
       default: return 'outline';
+    }
+  }
+
+  const getStatusBadgeVariant = (status: ServiceLogStatus) => {
+    switch(status) {
+        case 'Requested': return 'secondary';
+        case 'Approved': return 'outline';
+        case 'In Progress': return 'default';
+        case 'Completed': return 'default';
+        case 'Rejected': return 'destructive';
+        default: return 'outline';
     }
   }
   
@@ -127,8 +139,9 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
                 <div key={log.id} className="p-4 rounded-lg border bg-card relative group">
                     <div className="flex items-start justify-between mb-2 gap-4">
                         <div className="flex-1 space-y-1">
-                            <div className="flex items-center gap-4">
-                                <Badge variant={getBadgeVariant(log.type)}>{log.type}</Badge>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <Badge variant={getLogTypeBadgeVariant(log.type)}>{log.type}</Badge>
+                                <Badge variant={getStatusBadgeVariant(log.status)} className={log.status === 'Completed' ? 'bg-green-600 text-white' : ''}>{log.status}</Badge>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <Calendar className="h-4 w-4" />
                                     <span>{formatDate(log.date)}</span>
@@ -141,10 +154,6 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
                            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                                 <Wrench className="h-4 w-4" />
                                 <span>{log.technician}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm font-medium">
-                                {log.completed ? <CheckCircle className="h-4 w-4 text-green-600" /> : <Circle className="h-4 w-4 text-yellow-500" />}
-                                <span>{log.completed ? 'Completed' : 'Pending'}</span>
                             </div>
                         </div>
                     </div>
@@ -193,5 +202,3 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
     </Card>
   );
 }
-
-    

@@ -65,11 +65,13 @@ export interface Software {
   expirationDate?: string;
 }
 
+export type ServiceLogStatus = 'Requested' | 'Approved' | 'In Progress' | 'Completed' | 'Rejected';
+
 export interface ServiceLog {
   id: string;
   date: string;
-  type: 'Preventative' | 'Repair' | 'Inspection';
+  type: 'Preventative' | 'Repair' | 'Inspection' | 'Request';
   technician: string;
   notes: string;
-  completed: boolean;
+  status: ServiceLogStatus;
 }
