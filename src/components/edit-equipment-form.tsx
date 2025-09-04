@@ -46,6 +46,7 @@ const formSchema = z.object({
   manufacturer: z.string().min(1, { message: "Manufacturer is required." }),
   nciNumber: z.string().min(1, { message: "NCI number is required." }),
   nihNumber: z.string().min(1, { message: "NIH number is required." }),
+  vppNumber: z.string().optional(),
   transferred: z.boolean().default(false),
   poc: z.string().min(1, { message: "Point of Contact is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
@@ -82,6 +83,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       installedDate: parseISO(equipment.installedDate),
       node: equipment.node || "",
       probe: equipment.probe || "",
+      vppNumber: equipment.vppNumber || "",
       onNetwork: equipment.onNetwork.toString() as 'true' | 'false',
       hasServiceContract: equipment.hasServiceContract.toString() as 'true' | 'false',
       computerAssociated: equipment.computerAssociated || "",
@@ -204,6 +206,19 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
                 <FormLabel>NIH#</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., NIH-98766" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+           <FormField
+            control={form.control}
+            name="vppNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>VPP#</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., VPP-123" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

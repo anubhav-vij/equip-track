@@ -17,6 +17,7 @@ export interface Equipment {
   manufacturer: string;
   nciNumber: string;
   nihNumber: string;
+  vppNumber?: string;
   transferred: boolean;
   poc: string;
   notes: string;

@@ -221,6 +221,13 @@ export function EquipmentDetails({
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">
+                                            <Hash className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">VPP#</p>
+                                                <p className="font-medium">{equipment.vppNumber || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
                                             {equipment.transferred ? <CheckCircle className="h-5 w-5 mt-1 text-green-600" /> : <XCircle className="h-5 w-5 mt-1 text-red-600" />}
                                             <div>
                                                 <p className="text-muted-foreground">Transferred</p>
@@ -374,5 +381,3 @@ export function EquipmentDetails({
     </div>
   );
 }
-
-    
