@@ -232,7 +232,7 @@ export function EquipmentDetails({
                                 </div>
                                 <Separator />
                                 <div>
-                                    <h4 className="text-lg font-medium mb-4">Reese</h4>
+                                    <h4 className="text-lg font-medium mb-4">REES</h4>
                                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
                                         <div className="flex items-start gap-3">
                                             <SatelliteDish className="h-5 w-5 mt-1 text-primary" />
@@ -368,3 +368,5 @@ export function EquipmentDetails({
     </div>
   );
 }
+
+    
