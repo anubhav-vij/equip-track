@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle
 } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog } from "@/lib/types";
 import {
@@ -115,10 +115,16 @@ export function EquipmentDetails({
                 <h2 className="text-lg font-bold">{equipment.name}</h2>
                 <p className="text-sm text-muted-foreground">{equipment.model}</p>
             </div>
-            <Button variant="outline" size="sm" onClick={() => onEdit(equipment)}>
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="destructive" size="sm" onClick={onAddLog}>
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                Request Service
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => onEdit(equipment)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit
+              </Button>
+            </div>
             <Badge variant={getStatusBadgeVariant(equipment.status)} className="ml-auto hidden sm:block">{equipment.status}</Badge>
         </header>
 

@@ -48,7 +48,7 @@ export function AddServiceLogForm({ onFormSubmit }: AddServiceLogFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: "Preventative",
+      type: "Repair",
       technician: "",
       notes: "",
       completed: false,
@@ -143,9 +143,9 @@ export function AddServiceLogForm({ onFormSubmit }: AddServiceLogFormProps) {
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>Notes / Service Request Details</FormLabel>
               <FormControl>
-                <Textarea placeholder="Describe the work performed..." {...field} />
+                <Textarea placeholder="Describe the issue or work performed..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -173,3 +173,5 @@ export function AddServiceLogForm({ onFormSubmit }: AddServiceLogFormProps) {
     </Form>
   );
 }
+
+    

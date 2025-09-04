@@ -125,24 +125,30 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
         <div className="space-y-4">
             {sortedLogs.length > 0 ? sortedLogs.map(log => (
                 <div key={log.id} className="p-4 rounded-lg border bg-card relative group">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-4">
-                            <Badge variant={getBadgeVariant(log.type)}>{log.type}</Badge>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <Calendar className="h-4 w-4" />
-                                <span>{formatDate(log.date)}</span>
+                    <div className="flex items-start justify-between mb-2 gap-4">
+                        <div className="flex-1 space-y-1">
+                            <div className="flex items-center gap-4">
+                                <Badge variant={getBadgeVariant(log.type)}>{log.type}</Badge>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>{formatDate(log.date)}</span>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                             <p className="text-sm text-foreground/80 pr-8">{log.notes}</p>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-2">
+                           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                                <Wrench className="h-4 w-4" />
+                                <span>{log.technician}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm font-medium">
                                 {log.completed ? <CheckCircle className="h-4 w-4 text-green-600" /> : <Circle className="h-4 w-4 text-yellow-500" />}
                                 <span>{log.completed ? 'Completed' : 'Pending'}</span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                            <Wrench className="h-4 w-4 text-muted-foreground" />
-                            <span>{log.technician}</span>
-                        </div>
                     </div>
-                    <p className="text-sm text-foreground/80 pr-8">{log.notes}</p>
+                   
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -187,3 +193,5 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
     </Card>
   );
 }
+
+    
