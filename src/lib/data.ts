@@ -48,8 +48,8 @@ export const equipmentData: Equipment[] = [
       { id: 's1', name: 'GrabCAD Print', version: '1.57', licenseKey: 'LICENSE-GC-XYZ', installDate: '2022-01-15', expirationDate: '2025-01-15' },
     ],
     serviceLogs: [
-      { id: 'sl1', date: '2023-07-20', type: 'Preventative', technician: 'John Doe', notes: 'Completed annual preventative maintenance. Replaced print head and calibrated axes.' },
-      { id: 'sl2', date: '2024-02-10', type: 'Repair', technician: 'Jane Smith', notes: 'Replaced faulty heating element. System is back online.' },
+      { id: 'sl1', date: '2023-07-20', type: 'Preventative', technician: 'John Doe', notes: 'Completed annual preventative maintenance. Replaced print head and calibrated axes.', completed: true },
+      { id: 'sl2', date: '2024-02-10', type: 'Repair', technician: 'Jane Smith', notes: 'Replaced faulty heating element. System is back online.', completed: true },
     ],
     room: 'B-101',
     department: 'R&D',
@@ -84,7 +84,7 @@ export const equipmentData: Equipment[] = [
       { id: 's2', name: 'Haas Control Software', version: '11.82', licenseKey: 'N/A', installDate: '2021-03-20' },
     ],
     serviceLogs: [
-      { id: 'sl3', date: '2023-09-01', type: 'Preventative', technician: 'Mike Rivera', notes: 'Quarterly maintenance check. Lubricated all moving parts and checked fluid levels.' },
+      { id: 'sl3', date: '2023-09-01', type: 'Preventative', technician: 'Mike Rivera', notes: 'Quarterly maintenance check. Lubricated all moving parts and checked fluid levels.', completed: true },
     ],
     room: 'C-205',
     department: 'Manufacturing',
@@ -128,7 +128,7 @@ export const equipmentData: Equipment[] = [
       { id: 's3', name: 'OMNIC Software', version: '9.12', licenseKey: 'LICENSE-OMNIC-ABC', installDate: '2023-06-01', expirationDate: '2026-06-01' },
     ],
     serviceLogs: [
-        { id: 'sl4', date: '2024-05-15', type: 'Repair', technician: 'Support Team', notes: 'Laser assembly malfunction. Awaiting replacement part.' },
+        { id: 'sl4', date: '2024-05-15', type: 'Repair', technician: 'Support Team', notes: 'Laser assembly malfunction. Awaiting replacement part.', completed: false },
     ],
     room: 'A-310',
     department: 'Quality Assurance',
@@ -168,7 +168,7 @@ export const equipmentData: Equipment[] = [
     documents: [],
     software: [],
     serviceLogs: [
-        { id: 'sl5', date: '2024-04-10', type: 'Preventative', technician: 'BC Service', notes: 'Annual PM completed.'}
+        { id: 'sl5', date: '2024-04-10', type: 'Preventative', technician: 'BC Service', notes: 'Annual PM completed.', completed: true}
     ],
     room: 'D-102',
     department: 'Biochemistry',
@@ -201,8 +201,8 @@ export const equipmentData: Equipment[] = [
       { id: 's4', name: 'LAS X', version: '3.7', licenseKey: 'LICENSE-LASX-DEF', installDate: '2022-08-20' },
     ],
     serviceLogs: [
-        { id: 'sl6', date: '2024-05-20', type: 'Repair', technician: 'Self', notes: 'Power supply failed. Unit is beyond economical repair.'},
-        { id: 'sl7', date: '2024-06-01', type: 'Inspection', technician: 'Admin', notes: 'Unit decommissioned and scheduled for surplus.'}
+        { id: 'sl6', date: '2024-05-20', type: 'Repair', technician: 'Self', notes: 'Power supply failed. Unit is beyond economical repair.', completed: true},
+        { id: 'sl7', date: '2024-06-01', type: 'Inspection', technician: 'Admin', notes: 'Unit decommissioned and scheduled for surplus.', completed: true}
     ],
     room: 'E-401',
     department: 'Cell Biology',
@@ -456,7 +456,7 @@ export const equipmentData: Equipment[] = [
     contracts: [],
     documents: [],
     software: [],
-    serviceLogs: [{ id: 'sl8', date: '2024-01-10', type: 'Inspection', technician: 'EHS', notes: 'Annual certification passed.'}],
+    serviceLogs: [{ id: 'sl8', date: '2024-01-10', type: 'Inspection', technician: 'EHS', notes: 'Annual certification passed.', completed: true}],
     room: 'D-105',
     department: 'Chemistry',
     manufacturer: 'Labconco',
@@ -482,7 +482,7 @@ export const equipmentData: Equipment[] = [
     contracts: [],
     documents: [],
     software: [],
-    serviceLogs: [{ id: 'sl9', date: '2024-06-15', type: 'Repair', technician: 'Illumina FSE', notes: 'Fluidics system error. Field service engineer dispatched.'}],
+    serviceLogs: [{ id: 'sl9', date: '2024-06-15', type: 'Repair', technician: 'Illumina FSE', notes: 'Fluidics system error. Field service engineer dispatched.', completed: false}],
     room: 'B-210',
     department: 'Genomics Core',
     manufacturer: 'Illumina',
@@ -803,8 +803,8 @@ export const equipmentData: Equipment[] = [
         { id: `s-${id}`, name: `Control Software ${id}`, version: `${i % 3 + 1}.0`, licenseKey: `LICENSE-${id}`, installDate: `${purchaseYear}-01-20` },
       ] : [],
       serviceLogs: [
-        { id: `sl-${id}-1`, date: `${purchaseYear + 1}-06-10`, type: 'Preventative' as const, technician: 'Tech A', notes: 'Routine check-up.' },
-        ... (i % 4 === 0 ? [{ id: `sl-${id}-2`, date: `${purchaseYear + 2}-03-05`, type: 'Repair' as const, technician: 'Tech B', notes: 'Component replaced.' }] : [])
+        { id: `sl-${id}-1`, date: `${purchaseYear + 1}-06-10`, type: 'Preventative' as const, technician: 'Tech A', notes: 'Routine check-up.', completed: true },
+        ... (i % 4 === 0 ? [{ id: `sl-${id}-2`, date: `${purchaseYear + 2}-03-05`, type: 'Repair' as const, technician: 'Tech B', notes: 'Component replaced.', completed: false }] : [])
       ],
       room: `R-${100 + (i % 20)}`,
       department: `Dept-${String.fromCharCode(65 + (i % 10))}`,

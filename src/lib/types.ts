@@ -71,4 +71,5 @@ export interface ServiceLog {
   type: 'Preventative' | 'Repair' | 'Inspection';
   technician: string;
   notes: string;
+  completed: boolean;
 }

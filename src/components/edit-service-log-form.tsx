@@ -29,6 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import type { ServiceLog } from '@/lib/types';
+import { Checkbox } from './ui/checkbox';
 
 
 const formSchema = z.object({
@@ -36,6 +37,7 @@ const formSchema = z.object({
   type: z.enum(['Preventative', 'Repair', 'Inspection']),
   technician: z.string().min(1, { message: "Technician name is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
+  completed: z.boolean().default(false),
 });
 
 type EditServiceLogFormProps = {
@@ -146,6 +148,23 @@ export function EditServiceLogForm({ log, onFormSubmit }: EditServiceLogFormProp
                 <Textarea placeholder="Describe the work performed..." {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="completed"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+              <div className="space-y-0.5">
+                <FormLabel>Service Completed</FormLabel>
+              </div>
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
             </FormItem>
           )}
         />

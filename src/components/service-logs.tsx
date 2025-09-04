@@ -1,7 +1,7 @@
 
 "use client"
 import { useState } from 'react';
-import { Loader2, Sparkles, Plus, Wrench, Calendar, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { Loader2, Sparkles, Plus, Wrench, Calendar, MoreVertical, Pencil, Trash2, CheckCircle, Circle } from 'lucide-react';
 import { summarizeServiceReports, SummarizeServiceReportsOutput } from '@/ai/flows/summarize-service-reports';
 import type { ServiceLog } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -84,6 +84,8 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
     return format(parseISO(dateString), 'PPP');
   }
 
+  const sortedLogs = [...logs].sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -121,7 +123,7 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
         )}
 
         <div className="space-y-4">
-            {logs.length > 0 ? logs.map(log => (
+            {sortedLogs.length > 0 ? sortedLogs.map(log => (
                 <div key={log.id} className="p-4 rounded-lg border bg-card relative group">
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-4">
@@ -129,6 +131,10 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
                                 <span>{formatDate(log.date)}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                {log.completed ? <CheckCircle className="h-4 w-4 text-green-600" /> : <Circle className="h-4 w-4 text-yellow-500" />}
+                                <span>{log.completed ? 'Completed' : 'Pending'}</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 text-sm font-medium">
