@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Loader2, Sparkles, Plus, Wrench, Calendar, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 import { summarizeServiceReports, SummarizeServiceReportsOutput } from '@/ai/flows/summarize-service-reports';
-import type { ServiceLog, ServiceLogStatus } from '@/lib/types';
+import type { ServiceLog, ServiceLogStatus, UserRole } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -29,15 +29,18 @@ import {
 
 type ServiceLogsProps = {
   logs: ServiceLog[];
+  role: UserRole;
   onAddLog: () => void;
   onEditLog: (log: ServiceLog) => void;
   onDeleteLog: (logId: string) => void;
 };
 
-export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceLogsProps) {
+export function ServiceLogs({ logs, role, onAddLog, onEditLog, onDeleteLog }: ServiceLogsProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<SummarizeServiceReportsOutput | null>(null);
+
+  const isAdmin = role === 'admin';
 
   const handleSummarize = async () => {
     setLoading(true);
@@ -106,19 +109,21 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
             <CardDescription>A record of all service and maintenance activities.</CardDescription>
         </div>
         <div className="flex gap-2">
-             <Button variant="outline" onClick={handleSummarize} disabled={loading || logs.length === 0}>
-                {loading ? (
-                    <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Summarizing...
-                    </>
-                ) : (
-                    <>
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Summarize
-                    </>
-                )}
-            </Button>
+            {isAdmin && (
+              <Button variant="outline" onClick={handleSummarize} disabled={loading || logs.length === 0}>
+                  {loading ? (
+                      <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Summarizing...
+                      </>
+                  ) : (
+                      <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Summarize
+                      </>
+                  )}
+              </Button>
+            )}
             <Button onClick={onAddLog}><Plus className="mr-2 h-4 w-4" />Add Log</Button>
         </div>
       </CardHeader>
@@ -158,41 +163,43 @@ export function ServiceLogs({ logs, onAddLog, onEditLog, onDeleteLog }: ServiceL
                         </div>
                     </div>
                    
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                    <MoreVertical className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem onClick={() => onEditLog(log)}>
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Edit
-                                </DropdownMenuItem>
-                                <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                        Delete
-                                    </DropdownMenuItem>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete the service log.
-                                    </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => onDeleteLog(log.id)}>Continue</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                                </AlertDialog>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                    {isAdmin && (
+                      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon">
+                                      <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent>
+                                  <DropdownMenuItem onClick={() => onEditLog(log)}>
+                                      <Pencil className="mr-2 h-4 w-4" />
+                                      Edit
+                                  </DropdownMenuItem>
+                                  <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                          Delete
+                                      </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                          This action cannot be undone. This will permanently delete the service log.
+                                      </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => onDeleteLog(log.id)}>Continue</AlertDialogAction>
+                                      </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                  </AlertDialog>
+                              </DropdownMenuContent>
+                          </DropdownMenu>
+                      </div>
+                    )}
                 </div>
             )) : (
                 <p className="text-sm text-muted-foreground text-center py-8">No service logs available.</p>

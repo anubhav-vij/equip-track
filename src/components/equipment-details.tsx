@@ -3,7 +3,7 @@ import Image from "next/image";
 import {
   Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle
 } from 'lucide-react';
-import type { Equipment, ServiceContract, Document, Software, ServiceLog } from "@/lib/types";
+import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from "@/lib/types";
 import {
   Tabs,
   TabsContent,
@@ -31,6 +31,7 @@ import { Separator } from "./ui/separator";
 
 type EquipmentDetailsProps = {
   equipment: Equipment;
+  role: UserRole;
   onEdit: (equipment: Equipment) => void;
   onAddContract: () => void;
   onEditContract: (contract: ServiceContract) => void;
@@ -47,7 +48,8 @@ type EquipmentDetailsProps = {
 };
 
 export function EquipmentDetails({ 
-  equipment, 
+  equipment,
+  role,
   onEdit, 
   onAddContract, 
   onEditContract, 
@@ -97,6 +99,8 @@ export function EquipmentDetails({
     }
   };
 
+  const isAdmin = role === 'admin';
+
   return (
     <div className="flex flex-col h-full">
         <header className="flex items-center p-4 border-b h-16 gap-4 shrink-0">
@@ -120,10 +124,12 @@ export function EquipmentDetails({
                 <AlertTriangle className="mr-2 h-4 w-4" />
                 Request Service
               </Button>
-              <Button variant="outline" size="sm" onClick={() => onEdit(equipment)}>
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-              </Button>
+              {isAdmin && (
+                <Button variant="outline" size="sm" onClick={() => onEdit(equipment)}>
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit
+                </Button>
+              )}
             </div>
             <Badge variant={getStatusBadgeVariant(equipment.status)} className="ml-auto hidden sm:block">{equipment.status}</Badge>
         </header>
@@ -131,14 +137,14 @@ export function EquipmentDetails({
         <ScrollArea className="flex-1">
             <div className="p-4 md:p-6">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 mb-6">
+                    <TabsList className={cn("grid w-full mb-6", isAdmin ? "grid-cols-2 sm:grid-cols-4 lg:grid-cols-7" : "grid-cols-2")}>
                         <TabsTrigger value="overview"><Info className="mr-1.5 h-4 w-4" />Overview</TabsTrigger>
-                        <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>
-                        <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />Service Contract</TabsTrigger>
-                        <TabsTrigger value="documents"><FileText className="mr-1.5 h-4 w-4" />Documents</TabsTrigger>
-                        <TabsTrigger value="software"><Cpu className="mr-1.5 h-4 w-4" />Software</TabsTrigger>
+                        {isAdmin && <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>}
+                        {isAdmin && <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />Service Contract</TabsTrigger>}
+                        {isAdmin && <TabsTrigger value="documents"><FileText className="mr-1.5 h-4 w-4" />Documents</TabsTrigger>}
+                        {isAdmin && <TabsTrigger value="software"><Cpu className="mr-1.5 h-4 w-4" />Software</TabsTrigger>}
                         <TabsTrigger value="service"><Wrench className="mr-1.5 h-4 w-4" />Service</TabsTrigger>
-                        <TabsTrigger value="ai"><BrainCircuit className="mr-1.5 h-4 w-4" />AI</TabsTrigger>
+                        {isAdmin && <TabsTrigger value="ai"><BrainCircuit className="mr-1.5 h-4 w-4" />AI</TabsTrigger>}
                     </TabsList>
 
                     <TabsContent value="overview">
@@ -364,7 +370,8 @@ export function EquipmentDetails({
                     </TabsContent>
 
                     <TabsContent value="service">
-                       <ServiceLogs 
+                       <ServiceLogs
+                        role={role}
                         logs={equipment.serviceLogs}
                         onAddLog={onAddLog}
                         onEditLog={onEditLog}

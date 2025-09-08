@@ -1,4 +1,6 @@
 
+export type UserRole = 'admin' | 'user';
+
 export interface Equipment {
   id: string;
   name: string;

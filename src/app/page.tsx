@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react';
 import { Blocks, PlusCircle, Search, Upload } from 'lucide-react';
-import type { Equipment, ServiceContract, Document, Software, ServiceLog } from '@/lib/types';
+import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -23,12 +23,14 @@ import { EditSoftwareForm } from '@/components/edit-software-form';
 import { AddServiceLogForm } from '@/components/add-service-log-form';
 import { EditServiceLogForm } from '@/components/edit-service-log-form';
 import { ImportDataDialog } from '@/components/import-data-dialog';
+import { UserRoleSwitcher } from '@/components/user-role-switcher';
 
 
 export default function Home() {
   const [allEquipment, setAllEquipment] = useState<Equipment[]>(equipmentData);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(allEquipment[0] || null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [userRole, setUserRole] = useState<UserRole>('admin');
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -237,6 +239,7 @@ export default function Home() {
             <Blocks className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold">EquipTrack</h1>
           </div>
+          <UserRoleSwitcher role={userRole} setRole={setUserRole} />
         </div>
         <div className="p-2 border-b">
           <div className="relative">
@@ -266,48 +269,28 @@ export default function Home() {
             ))}
           </nav>
         </ScrollArea>
-        <div className="p-4 border-t shrink-0 space-y-2">
-          <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full" variant="outline">
-                <Upload className="mr-2 h-4 w-4" />
-                Import Data
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Import Equipment Data</DialogTitle>
-              </DialogHeader>
-              <ImportDataDialog onImport={handleImportData} />
-            </DialogContent>
-          </Dialog>
-
-          <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Equipment
-              </Button>
-            </DialogTrigger>
-             <DialogContent className="sm:max-w-[500px]">
+        {userRole === 'admin' && (
+          <div className="p-4 border-t shrink-0 space-y-2">
+            <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="w-full" variant="outline">
+                  <Upload className="mr-2 h-4 w-4" />
+                  Import Data
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Add New Equipment</DialogTitle>
+                  <DialogTitle>Import Equipment Data</DialogTitle>
                 </DialogHeader>
-                <AddEquipmentForm onFormSubmit={handleAddEquipment} />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-      <main className="flex flex-col overflow-hidden">
-        <header className="md:hidden flex items-center justify-between p-2 border-b h-16">
-           <div className="flex items-center gap-2">
-             <Blocks className="h-6 w-6 text-primary" />
-             <h1 className="text-lg font-bold">EquipTrack</h1>
-           </div>
+                <ImportDataDialog onImport={handleImportData} />
+              </DialogContent>
+            </Dialog>
+
             <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <PlusCircle className="h-5 w-5" />
+                <Button className="w-full">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Add Equipment
                 </Button>
               </DialogTrigger>
                <DialogContent className="sm:max-w-[500px]">
@@ -317,6 +300,33 @@ export default function Home() {
                   <AddEquipmentForm onFormSubmit={handleAddEquipment} />
               </DialogContent>
             </Dialog>
+          </div>
+        )}
+      </div>
+      <main className="flex flex-col overflow-hidden">
+        <header className="md:hidden flex items-center justify-between p-2 border-b h-16">
+           <div className="flex items-center gap-2">
+             <Blocks className="h-6 w-6 text-primary" />
+             <h1 className="text-lg font-bold">EquipTrack</h1>
+           </div>
+           <div className='flex items-center gap-2'>
+              <UserRoleSwitcher role={userRole} setRole={setUserRole} />
+              {userRole === 'admin' && (
+                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="icon" variant="ghost">
+                      <PlusCircle className="h-5 w-5" />
+                    </Button>
+                  </DialogTrigger>
+                   <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Add New Equipment</DialogTitle>
+                      </DialogHeader>
+                      <AddEquipmentForm onFormSubmit={handleAddEquipment} />
+                  </DialogContent>
+                </Dialog>
+              )}
+           </div>
         </header>
         
         <div className="md:hidden p-2 border-b">
@@ -334,7 +344,8 @@ export default function Home() {
 
         {selectedEquipment ? (
           <EquipmentDetails 
-            equipment={selectedEquipment} 
+            equipment={selectedEquipment}
+            role={userRole}
             onEdit={openEditDialog} 
             onAddContract={() => setIsAddContractDialogOpen(true)}
             onEditContract={openEditContractDialog}
@@ -354,6 +365,7 @@ export default function Home() {
             <div className="text-center p-4">
               <h2 className="text-2xl font-semibold text-muted-foreground">Welcome to EquipTrack</h2>
               <p className="mt-2 text-muted-foreground">Select an equipment from the list or add a new one.</p>
+              {userRole === 'admin' && (
                <div className="mt-4 flex justify-center gap-2">
                  <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                    <DialogTrigger asChild>
@@ -384,6 +396,7 @@ export default function Home() {
                     </DialogContent>
                   </Dialog>
                </div>
+              )}
             </div>
           </div>
         )}
