@@ -8,7 +8,7 @@ export interface Equipment {
   serialNumber: string;
   purchaseDate: string;
   warrantyEndDate: string;
-  status: 'Active' | 'In-Repair' | 'Decommissioned';
+  status: 'Active' | 'In-Repair' | 'Decommissioned' | 'Out of Service';
   imageUrl: string;
   contracts: ServiceContract[];
   documents: Document[];

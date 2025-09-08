@@ -39,7 +39,7 @@ const formSchema = z.object({
   serialNumber: z.string().min(1, { message: "Serial number is required." }),
   purchaseDate: z.date({ required_error: "Purchase date is required." }),
   warrantyEndDate: z.date({ required_error: "Warranty end date is required." }),
-  status: z.enum(['Active', 'In-Repair', 'Decommissioned']),
+  status: z.enum(['Active', 'In-Repair', 'Decommissioned', 'Out of Service']),
   imageUrl: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   room: z.string().min(1, { message: "Room is required." }),
   department: z.string().min(1, { message: "Department is required." }),
@@ -254,6 +254,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
                   <SelectContent>
                     <SelectItem value="Active">Active</SelectItem>
                     <SelectItem value="In-Repair">In-Repair</SelectItem>
+                    <SelectItem value="Out of Service">Out of Service</SelectItem>
                     <SelectItem value="Decommissioned">Decommissioned</SelectItem>
                   </SelectContent>
                 </Select>

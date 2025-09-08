@@ -153,7 +153,7 @@ export const equipmentData: Equipment[] = [
     serialNumber: 'SN-BC-4004',
     purchaseDate: '2020-11-01',
     warrantyEndDate: '2022-11-01',
-    status: 'Active',
+    status: 'Out of Service',
     imageUrl: 'https://placehold.co/100x100.png',
     hasServiceContract: true,
     contracts: [{
@@ -776,7 +776,7 @@ export const equipmentData: Equipment[] = [
     const purchaseYear = 2020 + (i % 5);
     const hasContract = Math.random() > 0.4;
     const onNetwork = Math.random() > 0.5;
-    const statusOptions: ('Active' | 'In-Repair' | 'Decommissioned')[] = ['Active', 'Active', 'Active', 'In-Repair', 'Decommissioned'];
+    const statusOptions: ('Active' | 'In-Repair' | 'Decommissioned' | 'Out of Service')[] = ['Active', 'Active', 'Out of Service', 'In-Repair', 'Decommissioned'];
     const serviceLogStatusOptions: ('Requested' | 'Approved' | 'In Progress' | 'Completed' | 'Rejected')[] = ['Requested', 'Approved', 'In Progress', 'Completed', 'Rejected'];
     return {
       id: `${id}`,

@@ -70,6 +70,8 @@ export function EquipmentDetails({
         return 'default';
       case 'In-Repair':
         return 'destructive';
+      case 'Out of Service':
+        return 'destructive';
       case 'Decommissioned':
         return 'secondary';
       default:
@@ -83,6 +85,8 @@ export function EquipmentDetails({
         return 'bg-green-500';
       case 'In-Repair':
         return 'bg-yellow-500';
+      case 'Out of Service':
+        return 'bg-orange-500';
       case 'Decommissioned':
         return 'bg-gray-500';
       default:
