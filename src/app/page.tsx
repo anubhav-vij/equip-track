@@ -56,10 +56,17 @@ export default function Home() {
 
   const filteredEquipment = useMemo(() => {
     if (!searchQuery) return allEquipment;
+    const lowercasedQuery = searchQuery.toLowerCase();
     return allEquipment.filter(e => 
-      e.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.model.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.serialNumber.toLowerCase().includes(searchQuery.toLowerCase())
+      e.name.toLowerCase().includes(lowercasedQuery) ||
+      e.model.toLowerCase().includes(lowercasedQuery) ||
+      e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
+      e.nihNumber.toLowerCase().includes(lowercasedQuery) ||
+      e.nciNumber.toLowerCase().includes(lowercasedQuery) ||
+      (e.vppNumber && e.vppNumber.toLowerCase().includes(lowercasedQuery)) ||
+      (e.node && e.node.toLowerCase().includes(lowercasedQuery)) ||
+      (e.probe && e.probe.toLowerCase().includes(lowercasedQuery)) ||
+      (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
     );
   }, [searchQuery, allEquipment]);
 
