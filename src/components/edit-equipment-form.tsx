@@ -54,6 +54,7 @@ const formSchema = z.object({
   installedDate: z.date({ required_error: "Installed date is required." }),
   node: z.string().optional(),
   probe: z.string().optional(),
+  ups: z.string().optional(),
   onNetwork: z.enum(['true', 'false'], { required_error: 'You must select whether the equipment is on the network.' }).transform(value => value === 'true'),
   computerAssociated: z.string().optional(),
   hasServiceContract: z.enum(['true', 'false'], { required_error: 'You must select whether the equipment has a service contract.' }).transform(value => value === 'true'),
@@ -83,6 +84,7 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       installedDate: parseISO(equipment.installedDate),
       node: equipment.node || "",
       probe: equipment.probe || "",
+      ups: equipment.ups || "",
       vppNumber: equipment.vppNumber || "",
       onNetwork: equipment.onNetwork.toString() as 'true' | 'false',
       hasServiceContract: equipment.hasServiceContract.toString() as 'true' | 'false',
@@ -410,6 +412,19 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
                 <FormLabel>Probe</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., P-456" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="ups"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>UPS</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., UPS-789" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -27,6 +27,7 @@ export interface Equipment {
   installedDate: string;
   node?: string;
   probe?: string;
+  ups?: string;
   onNetwork: boolean;
   computerAssociated?: string;
   hasServiceContract: boolean;

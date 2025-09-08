@@ -64,6 +64,7 @@ export const equipmentData: Equipment[] = [
     installedDate: '2022-01-20',
     node: 'N-123',
     probe: 'P-456',
+    ups: 'UPS-123',
     onNetwork: true,
     computerAssociated: '192.168.1.101',
   },
@@ -822,6 +823,7 @@ export const equipmentData: Equipment[] = [
       installedDate: `${purchaseYear}-01-20`,
       node: onNetwork && i % 3 === 0 ? `N-${150+i}` : undefined,
       probe: onNetwork && i % 3 === 0 ? `P-${500+i}`: undefined,
+      ups: onNetwork && i % 2 === 0 ? `UPS-${300+i}`: undefined,
       onNetwork: onNetwork,
       computerAssociated: onNetwork ? `192.168.1.${126 + i}` : undefined
     }

@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power
 } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from "@/lib/types";
 import {
@@ -265,6 +265,13 @@ export function EquipmentDetails({
                                             <div>
                                                 <p className="text-muted-foreground">Probe</p>
                                                 <p className="font-medium">{equipment.probe || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <Power className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">UPS</p>
+                                                <p className="font-medium">{equipment.ups || 'N/A'}</p>
                                             </div>
                                         </div>
                                     </div>
