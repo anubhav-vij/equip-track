@@ -80,6 +80,7 @@ export function ServiceLogs({ logs, role, onAddLog, onEditLog, onDeleteLog }: Se
       case 'Preventative': return 'secondary';
       case 'Repair': return 'destructive';
       case 'Inspection': return 'outline';
+      case 'Certification': return 'default';
       default: return 'outline';
     }
   }

@@ -31,6 +31,7 @@ export interface Equipment {
   onNetwork: boolean;
   computerAssociated?: string;
   hasServiceContract: boolean;
+  lastCertificationDate?: string;
 }
 
 export interface ServiceContract {
@@ -74,7 +75,7 @@ export type ServiceLogStatus = 'Requested' | 'Approved' | 'In Progress' | 'Compl
 export interface ServiceLog {
   id: string;
   date: string;
-  type: 'Preventative' | 'Repair' | 'Inspection' | 'Request';
+  type: 'Preventative' | 'Repair' | 'Inspection' | 'Request' | 'Certification';
   technician: string;
   notes: string;
   status: ServiceLogStatus;

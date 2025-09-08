@@ -470,7 +470,8 @@ export const equipmentData: Equipment[] = [
     notes: 'Annual EHS certification required.',
     purchasingAmbisPoNumber: 'PO-2019-005',
     installedDate: '2019-01-20',
-    onNetwork: false
+    onNetwork: false,
+    lastCertificationDate: '2024-01-10',
   },
   {
     id: '15',
@@ -778,6 +779,7 @@ export const equipmentData: Equipment[] = [
     const onNetwork = Math.random() > 0.5;
     const statusOptions: ('Active' | 'In-Repair' | 'Decommissioned' | 'Out of Service')[] = ['Active', 'Active', 'Out of Service', 'In-Repair', 'Decommissioned'];
     const serviceLogStatusOptions: ('Requested' | 'Approved' | 'In Progress' | 'Completed' | 'Rejected')[] = ['Requested', 'Approved', 'In Progress', 'Completed', 'Rejected'];
+    const serviceLogTypeOptions: ('Preventative' | 'Repair' | 'Inspection' | 'Request' | 'Certification')[] = ['Preventative', 'Repair', 'Inspection', 'Request', 'Certification'];
     return {
       id: `${id}`,
       name: `Equipment ${id}`,
@@ -807,7 +809,7 @@ export const equipmentData: Equipment[] = [
         { id: `s-${id}`, name: `Control Software ${id}`, version: `${i % 3 + 1}.0`, licenseKey: `LICENSE-${id}`, installDate: `${purchaseYear}-01-20` },
       ] : [],
       serviceLogs: [
-        { id: `sl-${id}-1`, date: `${purchaseYear + 1}-06-10`, type: 'Preventative' as const, technician: 'Tech A', notes: 'Routine check-up.', status: 'Completed' },
+        { id: `sl-${id}-1`, date: `${purchaseYear + 1}-06-10`, type: serviceLogTypeOptions[i%5], technician: 'Tech A', notes: 'Routine check-up.', status: 'Completed' },
         ... (i % 4 === 0 ? [{ id: `sl-${id}-2`, date: `${purchaseYear + 2}-03-05`, type: 'Repair' as const, technician: 'Tech B', notes: 'Component replaced.', status: serviceLogStatusOptions[i % 5] }] : [])
       ],
       room: `R-${100 + (i % 20)}`,

@@ -203,18 +203,35 @@ export default function Home() {
     setIsEditSoftwareDialogOpen(true);
   };
 
+  const updateCertificationDate = (logs: ServiceLog[]): string | undefined => {
+    const latestCertification = logs
+      .filter(log => log.type === 'Certification')
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0];
+    return latestCertification?.date;
+  };
+
   // --- Service Log Handlers ---
   const handleAddLog = (newLogData: Omit<ServiceLog, 'id'>) => {
     if (!selectedEquipment) return;
     const newLog: ServiceLog = { ...newLogData, id: `sl${Date.now()}` };
-    const updatedEquipment = { ...selectedEquipment, serviceLogs: [newLog, ...selectedEquipment.serviceLogs] };
+    const updatedLogs = [newLog, ...selectedEquipment.serviceLogs];
+    const updatedEquipment = { 
+      ...selectedEquipment, 
+      serviceLogs: updatedLogs,
+      lastCertificationDate: updateCertificationDate(updatedLogs),
+    };
     handleEditEquipment(updatedEquipment);
     setIsAddLogDialogOpen(false);
   };
 
   const handleEditLog = (updatedLog: ServiceLog) => {
     if (!selectedEquipment) return;
-    const updatedEquipment = { ...selectedEquipment, serviceLogs: selectedEquipment.serviceLogs.map(l => l.id === updatedLog.id ? updatedLog : l) };
+    const updatedLogs = selectedEquipment.serviceLogs.map(l => l.id === updatedLog.id ? updatedLog : l)
+    const updatedEquipment = { 
+      ...selectedEquipment, 
+      serviceLogs: updatedLogs,
+      lastCertificationDate: updateCertificationDate(updatedLogs),
+    };
     handleEditEquipment(updatedEquipment);
     setIsEditLogDialogOpen(false);
     setEditingLog(null);
@@ -222,7 +239,12 @@ export default function Home() {
 
   const handleDeleteLog = (logId: string) => {
     if (!selectedEquipment) return;
-    const updatedEquipment = { ...selectedEquipment, serviceLogs: selectedEquipment.serviceLogs.filter(l => l.id !== logId) };
+    const updatedLogs = selectedEquipment.serviceLogs.filter(l => l.id !== logId);
+    const updatedEquipment = { 
+      ...selectedEquipment, 
+      serviceLogs: updatedLogs,
+      lastCertificationDate: updateCertificationDate(updatedLogs),
+    };
     handleEditEquipment(updatedEquipment);
   };
 
@@ -232,8 +254,12 @@ export default function Home() {
   };
   
   const handleImportData = (data: Equipment[]) => {
-    setAllEquipment(data);
-    setSelectedEquipment(data[0] || null);
+    const processedData = data.map(eq => ({
+      ...eq,
+      lastCertificationDate: updateCertificationDate(eq.serviceLogs),
+    }))
+    setAllEquipment(processedData);
+    setSelectedEquipment(processedData[0] || null);
     setIsImportDialogOpen(false);
   }
 

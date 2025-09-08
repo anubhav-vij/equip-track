@@ -33,7 +33,7 @@ import type { ServiceLog } from '@/lib/types';
 
 const formSchema = z.object({
   date: z.date({ required_error: "Date is required." }),
-  type: z.enum(['Request', 'Preventative', 'Repair', 'Inspection']),
+  type: z.enum(['Request', 'Preventative', 'Repair', 'Inspection', 'Certification']),
   status: z.enum(['Requested', 'Approved', 'In Progress', 'Completed', 'Rejected']),
   technician: z.string().min(1, { message: "Technician name is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
@@ -119,6 +119,7 @@ export function EditServiceLogForm({ log, onFormSubmit }: EditServiceLogFormProp
                   <SelectItem value="Preventative">Preventative</SelectItem>
                   <SelectItem value="Repair">Repair</SelectItem>
                   <SelectItem value="Inspection">Inspection</SelectItem>
+                  <SelectItem value="Certification">Certification</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power
+  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power, FileBadge
 } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from "@/lib/types";
 import {
@@ -94,7 +94,7 @@ export function EquipmentDetails({
     }
   };
   
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
     try {
         return format(parseISO(dateString), 'PPP');
@@ -235,6 +235,13 @@ export function EquipmentDetails({
                                             <div>
                                                 <p className="text-muted-foreground">VPP#</p>
                                                 <p className="font-medium">{equipment.vppNumber || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <FileBadge className="h-5 w-5 mt-1 text-primary" />
+                                            <div>
+                                                <p className="text-muted-foreground">Last Certification Date</p>
+                                                <p className="font-medium">{formatDate(equipment.lastCertificationDate)}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">
