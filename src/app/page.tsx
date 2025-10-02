@@ -275,6 +275,40 @@ export default function Home() {
           <UserRoleSwitcher role={userRole} setRole={setUserRole} />
         </div>
         <div className="p-2 border-b">
+           {userRole === 'admin' && (
+            <div className="grid grid-cols-2 gap-2">
+              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Add New
+                  </Button>
+                </DialogTrigger>
+                 <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle>Add New Equipment</DialogTitle>
+                    </DialogHeader>
+                    <AddEquipmentForm onFormSubmit={handleAddEquipment} />
+                </DialogContent>
+              </Dialog>
+              <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full" variant="outline">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Import
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Import Equipment Data</DialogTitle>
+                  </DialogHeader>
+                  <ImportDataDialog onImport={handleImportData} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+        </div>
+        <div className="p-2 border-b">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
@@ -302,39 +336,6 @@ export default function Home() {
             ))}
           </nav>
         </ScrollArea>
-        {userRole === 'admin' && (
-          <div className="p-4 border-t shrink-0 space-y-2">
-            <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full" variant="outline">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Import Data
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Import Equipment Data</DialogTitle>
-                </DialogHeader>
-                <ImportDataDialog onImport={handleImportData} />
-              </DialogContent>
-            </Dialog>
-
-            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Equipment
-                </Button>
-              </DialogTrigger>
-               <DialogContent className="sm:max-w-[500px]">
-                  <DialogHeader>
-                    <DialogTitle>Add New Equipment</DialogTitle>
-                  </DialogHeader>
-                  <AddEquipmentForm onFormSubmit={handleAddEquipment} />
-              </DialogContent>
-            </Dialog>
-          </div>
-        )}
       </div>
       <main className="flex flex-col overflow-hidden">
         <header className="md:hidden flex items-center justify-between p-2 border-b h-16">
