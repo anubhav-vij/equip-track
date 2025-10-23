@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, BrainCircuit, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power, FileBadge
+  Calendar, Info, Wrench, FileText, Cpu, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power, FileBadge
 } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from "@/lib/types";
 import {
@@ -20,7 +20,6 @@ import {
 import { Button } from "./ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MaintenanceSuggester } from "./maintenance-suggester";
 import { ServiceLogs } from "./service-logs";
 import { DocumentList } from './document-list';
 import { ContractList } from './contract-list';
@@ -141,14 +140,13 @@ export function EquipmentDetails({
         <ScrollArea className="flex-1">
             <div className="p-4 md:p-6">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className={cn("grid w-full mb-6", isAdmin ? "grid-cols-2 sm:grid-cols-4 lg:grid-cols-7" : "grid-cols-2")}>
+                    <TabsList className={cn("grid w-full mb-6", isAdmin ? "grid-cols-2 sm:grid-cols-4 lg:grid-cols-6" : "grid-cols-2")}>
                         <TabsTrigger value="overview"><Info className="mr-1.5 h-4 w-4" />Overview</TabsTrigger>
                         {isAdmin && <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>}
                         {isAdmin && <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />Service Contract</TabsTrigger>}
                         {isAdmin && <TabsTrigger value="documents"><FileText className="mr-1.5 h-4 w-4" />Documents</TabsTrigger>}
                         {isAdmin && <TabsTrigger value="software"><Cpu className="mr-1.5 h-4 w-4" />Software</TabsTrigger>}
                         <TabsTrigger value="service"><Wrench className="mr-1.5 h-4 w-4" />Service</TabsTrigger>
-                        {isAdmin && <TabsTrigger value="ai"><BrainCircuit className="mr-1.5 h-4 w-4" />AI</TabsTrigger>}
                     </TabsList>
 
                     <TabsContent value="overview">
@@ -397,9 +395,6 @@ export function EquipmentDetails({
                         />
                     </TabsContent>
 
-                    <TabsContent value="ai">
-                        <MaintenanceSuggester equipment={equipment} />
-                    </TabsContent>
                 </Tabs>
             </div>
         </ScrollArea>
