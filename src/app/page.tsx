@@ -286,15 +286,22 @@ export default function Home() {
   };
   
   const handleTagClick = (tagValue: string) => {
-    const equipment = allEquipment.find(e => e.propertyTags.some(pt => pt.value === tagValue));
+    const equipment = allEquipment.find(
+      (e) => e.id !== selectedEquipment?.id && e.propertyTags.some((pt) => pt.value === tagValue)
+    );
     if (equipment) {
-        setSelectedEquipment(equipment);
+      setSelectedEquipment(equipment);
     } else {
+      const selfReferential = allEquipment.find(
+        (e) => e.id === selectedEquipment?.id && e.propertyTags.some((pt) => pt.value === tagValue)
+      );
+      if(!selfReferential){
         toast({
             variant: "destructive",
             title: "Equipment not found",
-            description: `No equipment found with the property tag "${tagValue}".`
-        })
+            description: `No other equipment found with the property tag "${tagValue}".`
+        });
+      }
     }
   };
 
