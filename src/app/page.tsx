@@ -32,6 +32,7 @@ export default function Home() {
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(allEquipment[0] || null);
   const [searchQuery, setSearchQuery] = useState('');
   const [userRole, setUserRole] = useState<UserRole>('admin');
+  const [activeTab, setActiveTab] = useState('overview');
 
   const { toast } = useToast();
 
@@ -83,6 +84,7 @@ export default function Home() {
     };
     setAllEquipment(prev => [newEquipment, ...prev]);
     setSelectedEquipment(newEquipment);
+    setActiveTab('overview');
     setIsAddDialogOpen(false);
     if (newEquipment.hasServiceContract) {
       setIsAddContractDialogOpen(true);
@@ -107,6 +109,7 @@ export default function Home() {
   const handleSelectChange = (equipmentId: string) => {
     const equipment = allEquipment.find(e => e.id === equipmentId);
     setSelectedEquipment(equipment || null);
+    setActiveTab('overview');
   }
 
   // --- Contract Handlers ---
@@ -262,6 +265,7 @@ export default function Home() {
     }))
     setAllEquipment(processedData);
     setSelectedEquipment(processedData[0] || null);
+    setActiveTab('overview');
     setIsImportDialogOpen(false);
   }
 
@@ -291,6 +295,7 @@ export default function Home() {
     );
     if (equipment) {
       setSelectedEquipment(equipment);
+      setActiveTab('overview');
     } else {
       const selfReferential = allEquipment.find(
         (e) => e.id === selectedEquipment?.id && e.propertyTags.some((pt) => pt.value === tagValue)
@@ -366,7 +371,10 @@ export default function Home() {
             {filteredEquipment.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setSelectedEquipment(item)}
+                onClick={() => {
+                  setSelectedEquipment(item);
+                  setActiveTab('overview');
+                }}
                 className={cn(
                   "flex flex-col items-start gap-1 rounded-lg p-3 text-left transition-all hover:bg-accent/80",
                   selectedEquipment?.id === item.id ? "bg-accent text-accent-foreground" : "text-card-foreground hover:text-accent-foreground",
@@ -420,8 +428,11 @@ export default function Home() {
 
         {selectedEquipment ? (
           <EquipmentDetails 
+            key={selectedEquipment.id}
             equipment={selectedEquipment}
             role={userRole}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
             onEdit={openEditDialog} 
             onAddContract={() => setIsAddContractDialogOpen(true)}
             onEditContract={openEditContractDialog}

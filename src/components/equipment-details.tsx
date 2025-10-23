@@ -32,6 +32,8 @@ import { Separator } from "./ui/separator";
 type EquipmentDetailsProps = {
   equipment: Equipment;
   role: UserRole;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
   onEdit: (equipment: Equipment) => void;
   onAddContract: () => void;
   onEditContract: (contract: ServiceContract) => void;
@@ -53,6 +55,8 @@ type EquipmentDetailsProps = {
 export function EquipmentDetails({ 
   equipment,
   role,
+  activeTab,
+  onTabChange,
   onEdit, 
   onAddContract, 
   onEditContract, 
@@ -146,7 +150,7 @@ export function EquipmentDetails({
 
         <ScrollArea className="flex-1">
             <div className="p-4 md:p-6">
-                <Tabs defaultValue="overview" className="w-full">
+                <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
                     <TabsList className={cn("grid w-full mb-6", isAdmin ? "grid-cols-2 sm:grid-cols-4 lg:grid-cols-7" : "grid-cols-2")}>
                         <TabsTrigger value="overview"><Info className="mr-1.5 h-4 w-4" />Overview</TabsTrigger>
                         {isAdmin && <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>}
