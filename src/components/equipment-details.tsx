@@ -1,9 +1,9 @@
 
 import Image from "next/image";
 import {
-  Calendar, Info, Wrench, FileText, Cpu, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power, FileBadge
+  Calendar, Info, Wrench, FileText, Cpu, HardDrive, ShieldCheck, Pencil, Building, Warehouse, Hash, Contact, StickyNote, CheckCircle, XCircle, ShoppingCart, CaseSensitive, SatelliteDish, GitBranch, Wifi, WifiOff, Server, AlertTriangle, Power, FileBadge, Link2
 } from 'lucide-react';
-import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from "@/lib/types";
+import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole, PropertyTag } from "@/lib/types";
 import {
   Tabs,
   TabsContent,
@@ -24,6 +24,7 @@ import { ServiceLogs } from "./service-logs";
 import { DocumentList } from './document-list';
 import { ContractList } from './contract-list';
 import { SoftwareList } from './software-list';
+import { AssociatedEquipment } from './associated-equipment';
 import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
 import { Separator } from "./ui/separator";
@@ -44,6 +45,8 @@ type EquipmentDetailsProps = {
   onAddLog: () => void;
   onEditLog: (log: ServiceLog) => void;
   onDeleteLog: (logId: string) => void;
+  onAddPropertyTag: (tag: Omit<PropertyTag, 'id'>) => void;
+  onDeletePropertyTag: (tagId: string) => void;
 };
 
 export function EquipmentDetails({ 
@@ -61,7 +64,9 @@ export function EquipmentDetails({
   onDeleteSoftware,
   onAddLog,
   onEditLog,
-  onDeleteLog
+  onDeleteLog,
+  onAddPropertyTag,
+  onDeletePropertyTag
 }: EquipmentDetailsProps) {
   const getStatusBadgeVariant = (status: Equipment['status']) => {
     switch (status) {
@@ -140,9 +145,10 @@ export function EquipmentDetails({
         <ScrollArea className="flex-1">
             <div className="p-4 md:p-6">
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className={cn("grid w-full mb-6", isAdmin ? "grid-cols-2 sm:grid-cols-4 lg:grid-cols-6" : "grid-cols-2")}>
+                    <TabsList className={cn("grid w-full mb-6", isAdmin ? "grid-cols-2 sm:grid-cols-4 lg:grid-cols-7" : "grid-cols-2")}>
                         <TabsTrigger value="overview"><Info className="mr-1.5 h-4 w-4" />Overview</TabsTrigger>
                         {isAdmin && <TabsTrigger value="acquisition"><ShoppingCart className="mr-1.5 h-4 w-4" />Acquisition</TabsTrigger>}
+                        {isAdmin && <TabsTrigger value="associated"><Link2 className="mr-1.5 h-4 w-4" />Associated</TabsTrigger>}
                         {isAdmin && <TabsTrigger value="contracts"><HardDrive className="mr-1.5 h-4 w-4" />Service Contract</TabsTrigger>}
                         {isAdmin && <TabsTrigger value="documents"><FileText className="mr-1.5 h-4 w-4" />Documents</TabsTrigger>}
                         {isAdmin && <TabsTrigger value="software"><Cpu className="mr-1.5 h-4 w-4" />Software</TabsTrigger>}
@@ -218,21 +224,21 @@ export function EquipmentDetails({
                                             <Hash className="h-5 w-5 mt-1 text-primary" />
                                             <div>
                                                 <p className="text-muted-foreground">NCI#</p>
-                                                <p className="font-medium">{equipment.nciNumber}</p>
+                                                <p className="font-medium">{equipment.propertyTags.find(pt => pt.type === 'NCI')?.value || 'N/A'}</p>
                                             </div>
                                         </div>
                                          <div className="flex items-start gap-3">
                                             <Hash className="h-5 w-5 mt-1 text-primary" />
                                             <div>
                                                 <p className="text-muted-foreground">NIH#</p>
-                                                <p className="font-medium">{equipment.nihNumber}</p>
+                                                <p className="font-medium">{equipment.propertyTags.find(pt => pt.type === 'NIH')?.value || 'N/A'}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">
                                             <Hash className="h-5 w-5 mt-1 text-primary" />
                                             <div>
                                                 <p className="text-muted-foreground">VPP#</p>
-                                                <p className="font-medium">{equipment.vppNumber || 'N/A'}</p>
+                                                <p className="font-medium">{equipment.propertyTags.find(pt => pt.type === 'VPP')?.value || 'N/A'}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">
@@ -356,6 +362,14 @@ export function EquipmentDetails({
                             </div>
                           </CardContent>
                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="associated">
+                        <AssociatedEquipment 
+                            propertyTags={equipment.propertyTags}
+                            onAddPropertyTag={onAddPropertyTag}
+                            onDeletePropertyTag={onDeletePropertyTag}
+                        />
                     </TabsContent>
 
                     <TabsContent value="contracts">

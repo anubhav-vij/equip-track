@@ -44,9 +44,6 @@ const formSchema = z.object({
   room: z.string().min(1, { message: "Room is required." }),
   department: z.string().min(1, { message: "Department is required." }),
   manufacturer: z.string().min(1, { message: "Manufacturer is required." }),
-  nciNumber: z.string().min(1, { message: "NCI number is required." }),
-  nihNumber: z.string().min(1, { message: "NIH number is required." }),
-  vppNumber: z.string().optional(),
   transferred: z.boolean().default(false),
   poc: z.string().min(1, { message: "Point of Contact is required." }),
   notes: z.string().min(1, { message: "Notes are required." }),
@@ -85,7 +82,6 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
       node: equipment.node || "",
       probe: equipment.probe || "",
       ups: equipment.ups || "",
-      vppNumber: equipment.vppNumber || "",
       onNetwork: equipment.onNetwork.toString() as 'true' | 'false',
       hasServiceContract: equipment.hasServiceContract.toString() as 'true' | 'false',
       computerAssociated: equipment.computerAssociated || "",
@@ -182,45 +178,6 @@ export function EditEquipmentForm({ equipment, onFormSubmit }: EditEquipmentForm
                 <FormLabel>Room</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g., C-205" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="nciNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>NCI#</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., NCI-00124" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="nihNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>NIH#</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., NIH-98766" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-           <FormField
-            control={form.control}
-            name="vppNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>VPP#</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., VPP-123" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react';
 import { Blocks, PlusCircle, Search, Upload } from 'lucide-react';
-import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole } from '@/lib/types';
+import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole, PropertyTag } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -61,16 +61,14 @@ export default function Home() {
       e.name.toLowerCase().includes(lowercasedQuery) ||
       e.model.toLowerCase().includes(lowercasedQuery) ||
       e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
-      e.nihNumber.toLowerCase().includes(lowercasedQuery) ||
-      e.nciNumber.toLowerCase().includes(lowercasedQuery) ||
-      (e.vppNumber && e.vppNumber.toLowerCase().includes(lowercasedQuery)) ||
+      e.propertyTags.some(pt => pt.value.toLowerCase().includes(lowercasedQuery)) ||
       (e.node && e.node.toLowerCase().includes(lowercasedQuery)) ||
       (e.probe && e.probe.toLowerCase().includes(lowercasedQuery)) ||
       (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
     );
   }, [searchQuery, allEquipment]);
 
-  const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs'>) => {
+  const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs' | 'propertyTags'>) => {
     const newEquipment: Equipment = {
       ...newEquipmentData,
       id: `eq${Date.now()}`,
@@ -78,6 +76,7 @@ export default function Home() {
       documents: [],
       software: [],
       serviceLogs: [],
+      propertyTags: [],
     };
     setAllEquipment(prev => [newEquipment, ...prev]);
     setSelectedEquipment(newEquipment);
@@ -263,6 +262,26 @@ export default function Home() {
     setIsImportDialogOpen(false);
   }
 
+  // Property Tag handlers
+  const handleAddPropertyTag = (newTag: Omit<PropertyTag, 'id'>) => {
+    if (!selectedEquipment) return;
+    const newPropertyTag: PropertyTag = { ...newTag, id: `pt${Date.now()}` };
+    const updatedEquipment = {
+      ...selectedEquipment,
+      propertyTags: [...selectedEquipment.propertyTags, newPropertyTag],
+    };
+    handleEditEquipment(updatedEquipment);
+  };
+
+  const handleDeletePropertyTag = (tagId: string) => {
+    if (!selectedEquipment) return;
+    const updatedEquipment = {
+      ...selectedEquipment,
+      propertyTags: selectedEquipment.propertyTags.filter(pt => pt.id !== tagId),
+    };
+    handleEditEquipment(updatedEquipment);
+  };
+
 
   return (
     <div className="grid md:grid-cols-[280px_1fr] h-screen bg-background text-foreground">
@@ -393,6 +412,8 @@ export default function Home() {
             onAddLog={() => setIsAddLogDialogOpen(true)}
             onEditLog={openEditLogDialog}
             onDeleteLog={handleDeleteLog}
+            onAddPropertyTag={handleAddPropertyTag}
+            onDeletePropertyTag={handleDeletePropertyTag}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center">

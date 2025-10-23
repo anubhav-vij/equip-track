@@ -1,6 +1,12 @@
 
 export type UserRole = 'admin' | 'user';
 
+export type PropertyTag = {
+  id: string;
+  type: 'NCI' | 'NIH' | 'VPP';
+  value: string;
+};
+
 export interface Equipment {
   id: string;
   name: string;
@@ -17,9 +23,7 @@ export interface Equipment {
   room: string;
   department: string;
   manufacturer: string;
-  nciNumber: string;
-  nihNumber: string;
-  vppNumber?: string;
+  propertyTags: PropertyTag[];
   transferred: boolean;
   poc: string;
   notes: string;
