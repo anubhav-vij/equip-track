@@ -47,6 +47,7 @@ type EquipmentDetailsProps = {
   onDeleteLog: (logId: string) => void;
   onAddPropertyTag: (tag: Omit<PropertyTag, 'id'>) => void;
   onDeletePropertyTag: (tagId: string) => void;
+  onTagClick: (tagValue: string) => void;
 };
 
 export function EquipmentDetails({ 
@@ -66,7 +67,8 @@ export function EquipmentDetails({
   onEditLog,
   onDeleteLog,
   onAddPropertyTag,
-  onDeletePropertyTag
+  onDeletePropertyTag,
+  onTagClick,
 }: EquipmentDetailsProps) {
   const getStatusBadgeVariant = (status: Equipment['status']) => {
     switch (status) {
@@ -369,6 +371,7 @@ export function EquipmentDetails({
                             propertyTags={equipment.propertyTags}
                             onAddPropertyTag={onAddPropertyTag}
                             onDeletePropertyTag={onDeletePropertyTag}
+                            onTagClick={onTagClick}
                         />
                     </TabsContent>
 

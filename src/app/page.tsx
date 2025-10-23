@@ -24,6 +24,7 @@ import { AddServiceLogForm } from '@/components/add-service-log-form';
 import { EditServiceLogForm } from '@/components/edit-service-log-form';
 import { ImportDataDialog } from '@/components/import-data-dialog';
 import { UserRoleSwitcher } from '@/components/user-role-switcher';
+import { useToast } from '@/hooks/use-toast';
 
 
 export default function Home() {
@@ -31,6 +32,8 @@ export default function Home() {
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(allEquipment[0] || null);
   const [searchQuery, setSearchQuery] = useState('');
   const [userRole, setUserRole] = useState<UserRole>('admin');
+
+  const { toast } = useToast();
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -281,6 +284,19 @@ export default function Home() {
     };
     handleEditEquipment(updatedEquipment);
   };
+  
+  const handleTagClick = (tagValue: string) => {
+    const equipment = allEquipment.find(e => e.propertyTags.some(pt => pt.value === tagValue));
+    if (equipment) {
+        setSelectedEquipment(equipment);
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Equipment not found",
+            description: `No equipment found with the property tag "${tagValue}".`
+        })
+    }
+  };
 
 
   return (
@@ -414,6 +430,7 @@ export default function Home() {
             onDeleteLog={handleDeleteLog}
             onAddPropertyTag={handleAddPropertyTag}
             onDeletePropertyTag={handleDeletePropertyTag}
+            onTagClick={handleTagClick}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center">

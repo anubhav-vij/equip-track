@@ -55,6 +55,7 @@ type AssociatedEquipmentProps = {
   propertyTags: PropertyTag[];
   onAddPropertyTag: (tag: Omit<PropertyTag, 'id'>) => void;
   onDeletePropertyTag: (tagId: string) => void;
+  onTagClick: (tagValue: string) => void;
 };
 
 const formSchema = z.object({
@@ -66,6 +67,7 @@ export function AssociatedEquipment({
   propertyTags,
   onAddPropertyTag,
   onDeletePropertyTag,
+  onTagClick,
 }: AssociatedEquipmentProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -99,7 +101,11 @@ export function AssociatedEquipment({
             {tags.length > 0 ? (
               tags.map((tag) => (
                 <TableRow key={tag.id}>
-                  <TableCell className="font-medium">{tag.value}</TableCell>
+                  <TableCell>
+                    <Button variant="link" className="p-0 h-auto" onClick={() => onTagClick(tag.value)}>
+                      {tag.value}
+                    </Button>
+                  </TableCell>
                   <TableCell className="text-right">
                      <AlertDialog>
                         <AlertDialogTrigger asChild>
