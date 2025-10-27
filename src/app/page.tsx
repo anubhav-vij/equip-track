@@ -66,8 +66,7 @@ export default function Home() {
       e.model.toLowerCase().includes(lowercasedQuery) ||
       e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
       e.propertyTags.some(pt => pt.value.toLowerCase().includes(lowercasedQuery)) ||
-      (e.node && e.node.toLowerCase().includes(lowercasedQuery)) ||
-      (e.probe && e.probe.toLowerCase().includes(lowercasedQuery)) ||
+      (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
       (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
     );
   }, [searchQuery, allEquipment]);
@@ -319,16 +318,13 @@ export default function Home() {
             <Blocks className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold">EquipTrack</h1>
           </div>
-          <UserRoleSwitcher role={userRole} setRole={setUserRole} />
-        </div>
-        <div className="p-2 border-b">
+          <div className='flex items-center gap-2'>
            {userRole === 'admin' && (
-            <div className="grid grid-cols-2 gap-2">
+            <>
               <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add New
+                  <Button size="icon">
+                    <PlusCircle className="h-5 w-5" />
                   </Button>
                 </DialogTrigger>
                  <DialogContent className="sm:max-w-[500px]">
@@ -340,9 +336,8 @@ export default function Home() {
               </Dialog>
               <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full" variant="outline">
-                    <Upload className="mr-2 h-4 w-4" />
-                    Import
+                  <Button size="icon" variant="outline">
+                    <Upload className="h-5 w-5" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -352,8 +347,10 @@ export default function Home() {
                   <ImportDataDialog onImport={handleImportData} />
                 </DialogContent>
               </Dialog>
-            </div>
+            </>
           )}
+          <UserRoleSwitcher role={userRole} setRole={setUserRole} />
+          </div>
         </div>
         <div className="p-2 border-b">
           <div className="relative">

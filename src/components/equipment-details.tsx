@@ -277,15 +277,8 @@ export function EquipmentDetails({
                                         <div className="flex items-start gap-3">
                                             <SatelliteDish className="h-5 w-5 mt-1 text-primary" />
                                             <div>
-                                                <p className="text-muted-foreground">Node</p>
-                                                <p className="font-medium">{equipment.node || 'N/A'}</p>
-                                            </div>
-                                        </div>
-                                         <div className="flex items-start gap-3">
-                                            <GitBranch className="h-5 w-5 mt-1 text-primary" />
-                                            <div>
-                                                <p className="text-muted-foreground">Probe</p>
-                                                <p className="font-medium">{equipment.probe || 'N/A'}</p>
+                                                <p className="text-muted-foreground">REES Node-Probe</p>
+                                                <p className="font-medium">{equipment.reesNodeProbe || 'N/A'}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-start gap-3">

@@ -49,8 +49,7 @@ const formSchema = z.object({
   notes: z.string().min(1, { message: "Notes are required." }),
   purchasingAmbisPoNumber: z.string().min(1, { message: "Purchasing AMBIS#/PO# is required." }),
   installedDate: z.date({ required_error: "Installed date is required." }),
-  node: z.string().optional(),
-  probe: z.string().optional(),
+  reesNodeProbe: z.string().optional(),
   ups: z.string().optional(),
   onNetwork: z.enum(['true', 'false'], { required_error: 'You must select whether the equipment is on the network.' }).transform(value => value === 'true'),
   computerAssociated: z.string().optional(),
@@ -85,8 +84,7 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
       poc: "",
       notes: "",
       purchasingAmbisPoNumber: "",
-      node: "",
-      probe: "",
+      reesNodeProbe: "",
       ups: "",
       computerAssociated: "",
     },
@@ -354,25 +352,12 @@ export function AddEquipmentForm({ onFormSubmit }: AddEquipmentFormProps) {
           />
           <FormField
             control={form.control}
-            name="node"
+            name="reesNodeProbe"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Node</FormLabel>
+                <FormLabel>REES Node-Probe</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g., N-123" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="probe"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Probe</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g., P-456" {...field} />
+                  <Input placeholder="e.g., N1-P111" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

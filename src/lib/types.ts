@@ -29,8 +29,7 @@ export interface Equipment {
   notes: string;
   purchasingAmbisPoNumber: string;
   installedDate: string;
-  node?: string;
-  probe?: string;
+  reesNodeProbe?: string;
   ups?: string;
   onNetwork: boolean;
   computerAssociated?: string;
