@@ -60,15 +60,15 @@ export default function Home() {
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
   const filteredEquipment = useMemo(() => {
-    return allEquipment.filter(e => {
-      const statusMatch = statusFilter === 'all' || e.status === statusFilter;
-      
-      if (!searchQuery) return statusMatch;
-      
-      if(!statusMatch) return false;
+    let equipment = allEquipment;
 
+    if (statusFilter !== 'all') {
+      equipment = equipment.filter(e => e.status === statusFilter);
+    }
+
+    if (searchQuery) {
       const lowercasedQuery = searchQuery.toLowerCase();
-      return (
+      equipment = equipment.filter(e => 
         e.name.toLowerCase().includes(lowercasedQuery) ||
         e.model.toLowerCase().includes(lowercasedQuery) ||
         e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
@@ -76,7 +76,9 @@ export default function Home() {
         (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
         (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
       );
-    });
+    }
+
+    return equipment;
   }, [searchQuery, allEquipment, statusFilter]);
 
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs' | 'propertyTags'>) => {
