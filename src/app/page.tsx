@@ -31,6 +31,7 @@ export default function Home() {
   const [allEquipment, setAllEquipment] = useState<Equipment[]>(equipmentData);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(allEquipment[0] || null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<Equipment['status'] | 'all'>('all');
   const [userRole, setUserRole] = useState<UserRole>('admin');
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -59,17 +60,24 @@ export default function Home() {
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
   const filteredEquipment = useMemo(() => {
-    if (!searchQuery) return allEquipment;
-    const lowercasedQuery = searchQuery.toLowerCase();
-    return allEquipment.filter(e => 
-      e.name.toLowerCase().includes(lowercasedQuery) ||
-      e.model.toLowerCase().includes(lowercasedQuery) ||
-      e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
-      e.propertyTags.some(pt => pt.value.toLowerCase().includes(lowercasedQuery)) ||
-      (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
-      (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
-    );
-  }, [searchQuery, allEquipment]);
+    return allEquipment.filter(e => {
+      const statusMatch = statusFilter === 'all' || e.status === statusFilter;
+      
+      if (!searchQuery) return statusMatch;
+      
+      if(!statusMatch) return false;
+
+      const lowercasedQuery = searchQuery.toLowerCase();
+      return (
+        e.name.toLowerCase().includes(lowercasedQuery) ||
+        e.model.toLowerCase().includes(lowercasedQuery) ||
+        e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
+        e.propertyTags.some(pt => pt.value.toLowerCase().includes(lowercasedQuery)) ||
+        (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
+        (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
+      );
+    });
+  }, [searchQuery, allEquipment, statusFilter]);
 
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs' | 'propertyTags'>) => {
     const newEquipment: Equipment = {
@@ -352,7 +360,7 @@ export default function Home() {
           <UserRoleSwitcher role={userRole} setRole={setUserRole} />
           </div>
         </div>
-        <div className="p-2 border-b">
+        <div className="p-2 border-b space-y-2">
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
@@ -362,6 +370,18 @@ export default function Home() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+           <Select onValueChange={(value) => setStatusFilter(value as any)} defaultValue="all">
+              <SelectTrigger>
+                <SelectValue placeholder="Filter by status..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="Active">Active</SelectItem>
+                <SelectItem value="In-Repair">In-Repair</SelectItem>
+                <SelectItem value="Out of Service">Out of Service</SelectItem>
+                <SelectItem value="Decommissioned">Decommissioned</SelectItem>
+              </SelectContent>
+            </Select>
         </div>
         <ScrollArea className="flex-1">
           <nav className="p-2 flex flex-col gap-1">
