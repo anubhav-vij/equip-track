@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Blocks, PlusCircle, Search, Upload } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole, PropertyTag } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
@@ -80,6 +80,20 @@ export default function Home() {
 
     return equipment;
   }, [searchQuery, allEquipment, statusFilter]);
+
+  useEffect(() => {
+    if (filteredEquipment.length > 0) {
+      if (!selectedEquipment || !filteredEquipment.find(e => e.id === selectedEquipment.id)) {
+        setSelectedEquipment(filteredEquipment[0]);
+      }
+    } else {
+      setSelectedEquipment(null);
+    }
+  }, [filteredEquipment, selectedEquipment]);
+
+  const handleStatusFilterChange = (value: Equipment['status'] | 'all') => {
+    setStatusFilter(value);
+  };
 
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs' | 'propertyTags'>) => {
     const newEquipment: Equipment = {
@@ -372,7 +386,7 @@ export default function Home() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-           <Select onValueChange={(value) => setStatusFilter(value as any)} defaultValue="all">
+           <Select onValueChange={handleStatusFilterChange} value={statusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Filter by status..." />
               </SelectTrigger>
