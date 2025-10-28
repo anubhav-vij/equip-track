@@ -366,18 +366,18 @@ export default function Home() {
   return (
     <div className="grid md:grid-cols-[280px_1fr] h-screen bg-background text-foreground">
       <div className="hidden md:flex flex-col bg-card border-r">
-        <div className="p-4 flex items-center justify-between gap-2 border-b h-24 shrink-0">
+        <div className="p-4 flex flex-col items-start justify-center gap-4 border-b h-32 shrink-0">
           <div className="flex items-center gap-2">
             <Blocks className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold">EquipTrack</h1>
           </div>
-          <div className="flex flex-col items-end gap-2">
-            {userRole === 'admin' && (
-              <div className="flex items-center gap-2">
-                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <div className="w-full">
+            {userRole === 'admin' ? (
+              <div className="grid grid-cols-2 gap-2">
+                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="icon">
-                      <PlusCircle className="h-5 w-5" />
+                    <Button size="sm">
+                      <PlusCircle className="mr-2 h-4 w-4" /> Add
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[500px]">
@@ -389,8 +389,8 @@ export default function Home() {
                 </Dialog>
                 <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="icon" variant="outline">
-                      <Upload className="h-5 w-5" />
+                    <Button size="sm" variant="outline">
+                      <Upload className="mr-2 h-4 w-4" /> Import
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -400,12 +400,16 @@ export default function Home() {
                     <ImportDataDialog onImport={handleImportData} />
                   </DialogContent>
                 </Dialog>
-                <Button size="icon" variant="outline" onClick={handleExportData}>
-                  <Download className="h-5 w-5" />
+                <Button size="sm" variant="outline" onClick={handleExportData}>
+                  <Download className="mr-2 h-4 w-4" /> Export
                 </Button>
+                 <UserRoleSwitcher role={userRole} setRole={setUserRole} />
+              </div>
+            ) : (
+              <div className='flex justify-end w-full'>
+                <UserRoleSwitcher role={userRole} setRole={setUserRole} />
               </div>
             )}
-            <UserRoleSwitcher role={userRole} setRole={setUserRole} />
           </div>
         </div>
         <div className="p-2 border-b space-y-2">
