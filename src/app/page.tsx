@@ -366,46 +366,46 @@ export default function Home() {
   return (
     <div className="grid md:grid-cols-[280px_1fr] h-screen bg-background text-foreground">
       <div className="hidden md:flex flex-col bg-card border-r">
-        <div className="p-4 flex items-center justify-between gap-2 border-b h-16 shrink-0">
+        <div className="p-4 flex items-center justify-between gap-2 border-b h-24 shrink-0">
           <div className="flex items-center gap-2">
             <Blocks className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold">EquipTrack</h1>
           </div>
-          <div className='flex items-center gap-2'>
-           {userRole === 'admin' && (
-            <>
-              <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="icon">
-                    <PlusCircle className="h-5 w-5" />
-                  </Button>
-                </DialogTrigger>
-                 <DialogContent className="sm:max-w-[500px]">
+          <div className="flex flex-col items-end gap-2">
+            {userRole === 'admin' && (
+              <div className="flex items-center gap-2">
+                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="icon">
+                      <PlusCircle className="h-5 w-5" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
                       <DialogTitle>Add New Equipment</DialogTitle>
                     </DialogHeader>
                     <AddEquipmentForm onFormSubmit={handleAddEquipment} />
-                </DialogContent>
-              </Dialog>
-              <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="icon" variant="outline">
-                    <Upload className="h-5 w-5" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Import Equipment Data</DialogTitle>
-                  </DialogHeader>
-                  <ImportDataDialog onImport={handleImportData} />
-                </DialogContent>
-              </Dialog>
-              <Button size="icon" variant="outline" onClick={handleExportData}>
-                <Download className="h-5 w-5" />
-              </Button>
-            </>
-          )}
-          <UserRoleSwitcher role={userRole} setRole={setUserRole} />
+                  </DialogContent>
+                </Dialog>
+                <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="icon" variant="outline">
+                      <Upload className="h-5 w-5" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Import Equipment Data</DialogTitle>
+                    </DialogHeader>
+                    <ImportDataDialog onImport={handleImportData} />
+                  </DialogContent>
+                </Dialog>
+                <Button size="icon" variant="outline" onClick={handleExportData}>
+                  <Download className="h-5 w-5" />
+                </Button>
+              </div>
+            )}
+            <UserRoleSwitcher role={userRole} setRole={setUserRole} />
           </div>
         </div>
         <div className="p-2 border-b space-y-2">
