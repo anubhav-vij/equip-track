@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -399,11 +400,11 @@ export default function Home() {
                   <ImportDataDialog onImport={handleImportData} />
                 </DialogContent>
               </Dialog>
+              <Button size="icon" variant="outline" onClick={handleExportData}>
+                <Download className="h-5 w-5" />
+              </Button>
             </>
           )}
-          <Button size="icon" variant="outline" onClick={handleExportData}>
-            <Download className="h-5 w-5" />
-          </Button>
           <UserRoleSwitcher role={userRole} setRole={setUserRole} />
           </div>
         </div>
@@ -658,3 +659,5 @@ export default function Home() {
 }
 
       
+
+    
