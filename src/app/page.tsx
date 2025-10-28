@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { Blocks, PlusCircle, Search, Upload } from 'lucide-react';
+import * as XLSX from 'xlsx';
+import { Blocks, PlusCircle, Search, Upload, Download } from 'lucide-react';
 import type { Equipment, ServiceContract, Document, Software, ServiceLog, UserRole, PropertyTag } from '@/lib/types';
 import { equipmentData } from '@/lib/data';
 import { cn } from '@/lib/utils';
@@ -62,29 +63,31 @@ export default function Home() {
   const filteredEquipment = useMemo(() => {
     let equipment = allEquipment;
 
+    if (searchQuery) {
+        const lowercasedQuery = searchQuery.toLowerCase();
+        equipment = equipment.filter(e => 
+            e.name.toLowerCase().includes(lowercasedQuery) ||
+            e.model.toLowerCase().includes(lowercasedQuery) ||
+            e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
+            e.propertyTags.some(pt => pt.value.toLowerCase().includes(lowercasedQuery)) ||
+            (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
+            (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
+        );
+    }
+
     if (statusFilter !== 'all') {
       equipment = equipment.filter(e => e.status === statusFilter);
     }
-
-    if (searchQuery) {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      equipment = equipment.filter(e => 
-        e.name.toLowerCase().includes(lowercasedQuery) ||
-        e.model.toLowerCase().includes(lowercasedQuery) ||
-        e.serialNumber.toLowerCase().includes(lowercasedQuery) ||
-        e.propertyTags.some(pt => pt.value.toLowerCase().includes(lowercasedQuery)) ||
-        (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
-        (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
-      );
-    }
-
+    
     return equipment;
   }, [searchQuery, allEquipment, statusFilter]);
 
   useEffect(() => {
     if (filteredEquipment.length > 0) {
-      if (!selectedEquipment || !filteredEquipment.find(e => e.id === selectedEquipment.id)) {
+      const currentSelectionInFiltered = filteredEquipment.some(e => e.id === selectedEquipment?.id);
+      if (!currentSelectionInFiltered) {
         setSelectedEquipment(filteredEquipment[0]);
+        setActiveTab('overview');
       }
     } else {
       setSelectedEquipment(null);
@@ -292,6 +295,29 @@ export default function Home() {
     setIsImportDialogOpen(false);
   }
 
+  const handleExportData = () => {
+    const dataToExport = allEquipment.map(eq => {
+      const { contracts, documents, software, serviceLogs, propertyTags, ...rest } = eq;
+      return {
+        ...rest,
+        contracts: JSON.stringify(contracts),
+        documents: JSON.stringify(documents),
+        software: JSON.stringify(software),
+        serviceLogs: JSON.stringify(serviceLogs),
+        propertyTags: JSON.stringify(propertyTags),
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Equipment");
+    XLSX.writeFile(workbook, "equipment_data.xlsx");
+    toast({
+      title: "Export Successful",
+      description: "Equipment data has been downloaded.",
+    });
+  };
+
   // Property Tag handlers
   const handleAddPropertyTag = (newTag: Omit<PropertyTag, 'id'>) => {
     if (!selectedEquipment) return;
@@ -371,6 +397,9 @@ export default function Home() {
                   <ImportDataDialog onImport={handleImportData} />
                 </DialogContent>
               </Dialog>
+              <Button size="icon" variant="outline" onClick={handleExportData}>
+                <Download className="h-5 w-5" />
+              </Button>
             </>
           )}
           <UserRoleSwitcher role={userRole} setRole={setUserRole} />
@@ -625,3 +654,5 @@ export default function Home() {
     </div>
   );
 }
+
+      
