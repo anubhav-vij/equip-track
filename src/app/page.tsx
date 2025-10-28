@@ -73,9 +73,7 @@ export default function Home() {
             (e.reesNodeProbe && e.reesNodeProbe.toLowerCase().includes(lowercasedQuery)) ||
             (e.ups && e.ups.toLowerCase().includes(lowercasedQuery))
         );
-    }
-
-    if (statusFilter !== 'all') {
+    } else if (statusFilter !== 'all') {
       equipment = equipment.filter(e => e.status === statusFilter);
     }
     
@@ -95,7 +93,11 @@ export default function Home() {
   }, [filteredEquipment, selectedEquipment]);
 
   const handleStatusFilterChange = (value: Equipment['status'] | 'all') => {
+    setSearchQuery('');
     setStatusFilter(value);
+    const newFilteredList = allEquipment.filter(e => value === 'all' || e.status === value);
+    setSelectedEquipment(newFilteredList[0] || null);
+    setActiveTab('overview');
   };
 
   const handleAddEquipment = (newEquipmentData: Omit<Equipment, 'id' | 'contracts' | 'documents' | 'software' | 'serviceLogs' | 'propertyTags'>) => {
@@ -397,11 +399,11 @@ export default function Home() {
                   <ImportDataDialog onImport={handleImportData} />
                 </DialogContent>
               </Dialog>
-              <Button size="icon" variant="outline" onClick={handleExportData}>
-                <Download className="h-5 w-5" />
-              </Button>
             </>
           )}
+          <Button size="icon" variant="outline" onClick={handleExportData}>
+            <Download className="h-5 w-5" />
+          </Button>
           <UserRoleSwitcher role={userRole} setRole={setUserRole} />
           </div>
         </div>
