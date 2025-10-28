@@ -299,27 +299,45 @@ export default function Home() {
   }
 
   const handleExportData = () => {
-    const dataToExport = allEquipment.map(eq => {
-      const { contracts, documents, software, serviceLogs, propertyTags, ...rest } = eq;
-      return {
-        ...rest,
-        contracts: JSON.stringify(contracts),
-        documents: JSON.stringify(documents),
-        software: JSON.stringify(software),
-        serviceLogs: JSON.stringify(serviceLogs),
-        propertyTags: JSON.stringify(propertyTags),
-      };
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Equipment");
+
+    // Main Equipment Sheet
+    const equipmentSheetData = allEquipment.map(eq => {
+      const { contracts, documents, software, serviceLogs, propertyTags, ...rest } = eq;
+      return rest;
+    });
+    const equipmentWorksheet = XLSX.utils.json_to_sheet(equipmentSheetData);
+    XLSX.utils.book_append_sheet(workbook, equipmentWorksheet, "Equipment");
+
+    // Helper function to create linked data sheets
+    const createLinkedSheet = (sheetName: string, dataExtractor: (eq: Equipment) => any[]) => {
+      const allLinkedData = allEquipment.flatMap(eq => 
+        dataExtractor(eq).map(item => ({
+          equipmentId: eq.id,
+          equipmentName: eq.name,
+          ...item,
+        }))
+      );
+      if (allLinkedData.length > 0) {
+        const worksheet = XLSX.utils.json_to_sheet(allLinkedData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+      }
+    };
+    
+    // Create individual sheets
+    createLinkedSheet("Service Contracts", (eq) => eq.contracts);
+    createLinkedSheet("Documents", (eq) => eq.documents);
+    createLinkedSheet("Software", (eq) => eq.software);
+    createLinkedSheet("Service Logs", (eq) => eq.serviceLogs);
+    createLinkedSheet("Property Tags", (eq) => eq.propertyTags);
+
     XLSX.writeFile(workbook, "equipment_data.xlsx");
     toast({
       title: "Export Successful",
       description: "Equipment data has been downloaded.",
     });
   };
+
 
   // Property Tag handlers
   const handleAddPropertyTag = (newTag: Omit<PropertyTag, 'id'>) => {
@@ -665,3 +683,4 @@ export default function Home() {
       
 
     
+
